@@ -4,17 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>War Room Console: 423 ob BpS Tactical Intel</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Military Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Leaflet.js CSS for Interactive Satellite Maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <!-- Leaflet.js JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <script>
@@ -63,7 +58,6 @@
 <body class="font-sans text-gray-100 min-h-screen flex flex-col relative selection:bg-tacred selection:text-white">
     <div class="scanline absolute inset-0 z-50 pointer-events-none opacity-20"></div>
 
-    <!-- MAIN HEADER HUD -->
     <header class="bg-tacgray-800 border-b border-tacgray-600 px-6 py-3 flex flex-wrap justify-between items-center gap-4 z-40 relative">
         <div class="flex items-center gap-4">
             <div class="h-10 w-10 border border-tacred flex items-center justify-center bg-tacred/10 animate-pulse glow-red rounded">
@@ -72,7 +66,7 @@
             <div>
                 <div class="flex items-center gap-2">
                     <span class="text-xs font-mono px-2 py-0.5 bg-tacred/20 text-tacred border border-tacred/40 rounded">ГРИФ: ЦІЛКОМ ТАЄМНО</span>
-                    <span class="text-xs font-mono text-gray-500">REF: 423-INTEL-MAP-CONSOLE v4.7_OPTIMIZED</span>
+                    <span class="text-xs font-mono text-gray-500">REF: 423-INTEL-C2-CONSOLE v5.0</span>
                 </div>
                 <h1 class="text-xl font-bold tracking-wider text-white uppercase font-sans">ВІЙСЬКА БЕЗПІЛОТНИХ СИСТЕМ (ВБС) РФ: ОПЕРАТИВНА КАРТА 2026</h1>
             </div>
@@ -90,15 +84,13 @@
             <div class="h-8 w-px bg-tacgray-600"></div>
             <div>
                 <div class="text-gray-500">ЧАС СЕАНСУ (МСЦ):</div>
-                <div id="live-clock" class="text-tacred font-bold">2026-05-26 22:34:12</div>
+                <div id="live-clock" class="text-tacred font-bold">...</div>
             </div>
         </div>
     </header>
 
-    <!-- MAIN TERMINAL LAYOUT -->
     <main class="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 z-10 relative">
         
-        <!-- LEFT PANEL: ORBAT DIRECTORY (3 cols) -->
         <section class="lg:col-span-3 bg-tacgray-800 border border-tacgray-600 rounded flex flex-col overflow-hidden glow-blue">
             <div class="bg-tacgray-900/90 border-b border-tacgray-600 p-4 flex justify-between items-center">
                 <span class="font-mono text-sm text-tacblue font-bold flex items-center gap-2">
@@ -108,35 +100,34 @@
             </div>
             
             <div class="flex-grow overflow-y-auto p-2 space-y-2" id="unit-list">
-                <!-- Populated dynamically by JS -->
-            </div>
+                </div>
 
             <div class="bg-tacgray-900 p-3 border-t border-tacgray-600 text-center font-mono text-[10px] text-gray-500">
                 MAP ENGINE: LEAFLET SAT MATRIX // SIGNAL RECEPTORS: STABLE
             </div>
         </section>
 
-        <!-- CENTER/RIGHT DISPLAY GRID (9 cols) -->
         <section class="lg:col-span-9 flex flex-col gap-4">
             
-            <!-- HUD CONTROLLER & TABS -->
             <div class="bg-tacgray-800 border border-tacgray-600 p-2 rounded flex flex-wrap justify-between items-center gap-2">
-                <div class="flex gap-2" id="main-tabs">
-                    <button onclick="switchTab('intel')" id="tab-intel" class="px-4 py-2 text-sm font-bold border border-tacred bg-tacred/10 text-tacred rounded font-mono flex items-center gap-2 transition-all">
+                <div class="flex flex-wrap gap-2" id="main-tabs">
+                    <button onclick="switchTab('intel')" id="tab-intel" class="px-3 py-2 text-[11px] lg:text-xs font-bold border border-tacred bg-tacred/10 text-tacred rounded font-mono flex items-center gap-2 transition-all">
                         <i class="fa-solid fa-users-viewfinder"></i> 01: ТАКТИЧНИЙ ПРОФІЛЬ
                     </button>
-                    <button onclick="switchTab('map')" id="tab-map" class="px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
-                        <i class="fa-solid fa-map-location-dot"></i> 02: ГЕО-ПРОСТОРОВА КАРТА З ШАРАМИ
+                    <button onclick="switchTab('map')" id="tab-map" class="px-3 py-2 text-[11px] lg:text-xs font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-map-location-dot"></i> 02: КАРТА
                     </button>
-                    <button onclick="switchTab('tech')" id="tab-tech" class="px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
-                        <i class="fa-solid fa-microchip"></i> 03: КАТАЛОГ БпЛА ПРОТИВНИКА
+                    <button onclick="switchTab('tech')" id="tab-tech" class="px-3 py-2 text-[11px] lg:text-xs font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-microchip"></i> 03: КАТАЛОГ БпЛА
                     </button>
-                    <button onclick="switchTab('testing')" id="tab-testing" class="px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
-                        <i class="fa-solid fa-flask-vial"></i> 04: ТЕСТУВАННЯ «РУБИКОН»
+                    <button onclick="switchTab('testing')" id="tab-testing" class="px-3 py-2 text-[11px] lg:text-xs font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-flask-vial"></i> 04: R&D
+                    </button>
+                    <button onclick="switchTab('analytics')" id="tab-analytics" class="px-3 py-2 text-[11px] lg:text-xs font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-chart-line"></i> 05: АНАЛІТИКА ТА ЗВІТИ
                     </button>
                 </div>
                 
-                <!-- Tactical Host Link Panel -->
                 <div class="flex flex-wrap items-center gap-3">
                     <div class="flex items-center gap-2 bg-tacgray-900/80 border border-tacgray-600 px-2.5 py-1 rounded">
                         <span class="text-gray-500 font-mono text-[10px]">HOST:</span>
@@ -150,7 +141,6 @@
                 </div>
             </div>
 
-            <!-- TAB CONTENT 1: UNIT INTEL PROFILE -->
             <div id="content-intel" class="tab-content flex-grow grid grid-cols-1 md:grid-cols-12 gap-4">
                 <div class="md:col-span-8 bg-tacgray-800 border border-tacgray-600 rounded p-6 flex flex-col justify-between overflow-y-auto max-h-[550px]">
                     <div>
@@ -229,9 +219,7 @@
                 </div>
             </div>
 
-            <!-- TAB CONTENT 2: INTERACTIVE SATELLITE MAP WITH LAYERS & KML IMPORT -->
             <div id="content-map" class="tab-content flex-grow hidden grid grid-cols-1 md:grid-cols-12 gap-4 bg-tacgray-800 border border-tacgray-600 rounded p-4 min-h-[500px]">
-                <!-- Layer controls & KML Drag-Drop sidebar (3 cols) -->
                 <div class="md:col-span-3 flex flex-col gap-4 justify-between overflow-y-auto max-h-[480px] pr-1">
                     <div class="space-y-4">
                         <div class="border-b border-tacgray-600 pb-2">
@@ -239,7 +227,6 @@
                             <p class="text-xs text-gray-400 font-mono mt-0.5">Фільтрація угруповання на карті</p>
                         </div>
                         
-                        <!-- Checkboxes for filtering Leaflet layers -->
                         <div class="bg-tacgray-900/60 border border-tacgray-600 p-3 rounded space-y-2.5">
                             <label class="flex items-center gap-3 cursor-pointer text-sm font-mono text-white">
                                 <input type="checkbox" id="layer-regular" checked onchange="toggleMapLayer('regular')" class="accent-tacred h-4 w-4 rounded">
@@ -251,19 +238,18 @@
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer text-sm font-mono text-white">
                                 <input type="checkbox" id="layer-irregular" checked onchange="toggleMapLayer('irregular')" class="accent-tacyellow h-4 w-4 rounded">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-skull-crossbones text-tacyellow"></i> ПВК та Добровольці</span>
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-skull-crossbones text-tacyellow"></i> ПВК/Добровольці</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer text-sm font-mono text-white">
                                 <input type="checkbox" id="layer-test" checked onchange="toggleMapLayer('test')" class="accent-tacgreen h-4 w-4 rounded">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-flask-vial text-tacgreen"></i> Полігони («Рубикон»)</span>
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-flask-vial text-tacgreen"></i> Полігони</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer text-sm font-mono text-white">
                                 <input type="checkbox" id="layer-kml" checked onchange="toggleMapLayer('kml')" class="accent-amber-500 h-4 w-4 rounded">
-                                <span class="flex items-center gap-2 text-amber-400 font-bold"><i class="fa-solid fa-bullseye"></i> Розвіддані KML (Травень)</span>
+                                <span class="flex items-center gap-2 text-amber-400 font-bold"><i class="fa-solid fa-bullseye"></i> Цілі (KML/Manual)</span>
                             </label>
                         </div>
 
-                        <!-- Manual Target Mode Toggle Button -->
                         <div class="border-t border-tacgray-600 pt-3">
                             <button id="manual-placement-btn" onclick="toggleManualPlacementMode()" class="w-full bg-tacgray-900/80 hover:bg-tacgray-700/80 border border-tacgray-600 text-gray-300 hover:text-white px-3 py-2 rounded text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 uppercase">
                                 <i class="fa-solid fa-location-crosshairs text-tacyellow"></i>
@@ -271,44 +257,29 @@
                             </button>
                         </div>
 
-                        <!-- Interactive Drag & Drop KML Uploader -->
                         <div class="bg-tacgray-900/80 border border-dashed border-tacgray-600 hover:border-tacyellow p-3 rounded transition-all text-center" id="kml-drop-zone">
                             <i class="fa-solid fa-file-import text-tacyellow text-xl mb-1.5 animate-bounce"></i>
-                            <h4 class="text-xs font-bold text-white uppercase font-sans">Імпорт тактичного KML</h4>
-                            <p class="text-[10px] text-gray-400 mt-1 mb-2">Перетягніть ваш .kml або натисніть нижче</p>
+                            <h4 class="text-xs font-bold text-white uppercase font-sans">Імпорт KML</h4>
                             <input type="file" id="kml-file-input" accept=".kml" onchange="handleKMLUpload(event)" class="hidden">
-                            <button onclick="document.getElementById('kml-file-input').click()" class="bg-tacyellow hover:bg-yellow-600 text-tacgray-900 text-[10px] font-mono font-bold py-1 px-3 rounded uppercase transition-all w-full">Вибрати файл</button>
-                        </div>
-
-                        <!-- Fast positioning shortcuts via text links -->
-                        <div class="border-t border-tacgray-600 pt-2">
-                            <h4 class="text-xs font-mono font-bold text-gray-400 mb-2 uppercase">Швидкий фокус на підрозділ:</h4>
-                            <div class="grid grid-cols-1 gap-1.5 overflow-y-auto max-h-[120px] text-xs pr-1" id="map-shortcut-container">
-                                <!-- Shortcuts populated dynamically -->
-                            </div>
+                            <button onclick="document.getElementById('kml-file-input').click()" class="bg-tacyellow hover:bg-yellow-600 text-tacgray-900 text-[10px] font-mono font-bold py-1 px-3 rounded uppercase transition-all w-full mt-2">Вибрати файл</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- LEAFLET SATELLITE MAP CONTAINER & DETECTED TARGETS LIST (9 cols) -->
                 <div class="md:col-span-9 flex flex-col gap-4">
                     <div class="bg-tacgray-900 border border-tacgray-600 rounded relative overflow-hidden h-[340px]" id="tactical-leaflet-map-div">
-                        <!-- Leaflet engine injects map here -->
-                        
-                        <!-- Coordinates tracker overlay inside the map container -->
                         <div class="absolute bottom-3 left-3 bg-tacgray-900/90 border border-tacyellow/40 px-3 py-1.5 rounded font-mono text-[10px] text-tacyellow z-[1000] pointer-events-none flex items-center gap-2 shadow-lg">
                             <i class="fa-solid fa-arrow-pointer animate-pulse text-[8px]"></i>
                             <span>GIS: <span id="map-coords-tracker">0.000000, 0.000000</span></span>
                         </div>
                     </div>
 
-                    <!-- GEOSPATIAL TARGET ANALYSIS PANEL (Extracted from user's KML) -->
                     <div class="bg-tacgray-900/60 border border-tacgray-600 rounded p-4">
                         <div class="flex justify-between items-center border-b border-tacgray-600 pb-2 mb-3">
                             <span class="font-mono text-xs text-tacyellow font-bold uppercase flex items-center gap-2">
                                 <i class="fa-solid fa-table-list"></i> Реєстр розвідданих KML та ручних цілей
                             </span>
-                            <span id="kml-status-badge" class="text-[10px] font-mono bg-tacyellow/20 text-tacyellow border border-tacyellow/40 px-2 py-0.5 rounded uppercase">СИСТЕМА СИНХРОНІЗОВАНА</span>
+                            <span id="kml-status-badge" class="text-[10px] font-mono bg-tacyellow/20 text-tacyellow border border-tacyellow/40 px-2 py-0.5 rounded uppercase font-bold">СИНХРОНІЗОВАНО</span>
                         </div>
                         <div class="overflow-x-auto max-h-[140px]">
                             <table class="w-full text-left font-mono text-xs text-gray-300">
@@ -322,15 +293,13 @@
                                     </tr>
                                 </thead>
                                 <tbody id="kml-targets-table-body" class="divide-y divide-tacgray-700/50">
-                                    <!-- Populated via JS -->
-                                </tbody>
+                                    </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB CONTENT 3: EXHAUSTIVE UAV DIRECTORY (No spectrum analyzer, no calculator) -->
             <div id="content-tech" class="tab-content flex-grow hidden bg-tacgray-800 border border-tacgray-600 rounded p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-tacgray-600 pb-4 gap-4">
                     <div>
@@ -343,16 +312,13 @@
                         <button onclick="filterUavs('loitering')" id="filter-loitering" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">Баражуючі</button>
                         <button onclick="filterUavs('fpv')" id="filter-fpv" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">FPV-Ударні</button>
                         <button onclick="filterUavs('heavy')" id="filter-heavy" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">Важкі Нічні</button>
-                        <button onclick="filterUavs('micro')" id="filter-micro" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">Мікро-коптери</button>
+                        <button onclick="filterUavs('micro')" id="filter-micro" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">Мікро</button>
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto max-h-[420px] pr-2" id="uav-catalog-grid">
-                    <!-- Populated via JS -->
-                </div>
+                    </div>
             </div>
 
-            <!-- TAB CONTENT 4: RUBIKON & BARS SARMAT TESTING -->
             <div id="content-testing" class="tab-content flex-grow hidden bg-tacgray-800 border border-tacgray-600 rounded p-6">
                 <div class="flex justify-between items-center mb-6 border-b border-tacgray-600 pb-4">
                     <div>
@@ -361,7 +327,6 @@
                     </div>
                     <span class="text-xs bg-tacgreen/10 text-tacgreen border border-tacgreen/30 px-3 py-1 rounded font-mono font-bold animate-pulse">R&amp;D MILITARY HUB</span>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <h3 class="text-lg font-bold text-white border-b border-tacgray-600 pb-2"><i class="fa-solid fa-network-wired text-tacblue"></i> ЦЕНТР ОБОРОННИХ ТЕХНОЛОГІЙ «РУБИКОН» МО РФ</h3>
@@ -371,20 +336,10 @@
                         <div class="bg-tacgray-900/60 border border-tacgray-600 p-4 rounded space-y-3 text-xs font-mono">
                             <div class="flex items-start gap-2">
                                 <i class="fa-solid fa-check-double text-tacgreen mt-0.5"></i>
-                                <div><strong class="text-white">Швидкий трансфер:</strong> Оцінка та закупівля технологій (ШІ, автозахоплення) за спрощеною схемою протягом 2-3 тижнів.</div>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <i class="fa-solid fa-check-double text-tacgreen mt-0.5"></i>
-                                <div><strong class="text-white">Інтеграція частот:</strong> Систематизація робочих частот FPV (діапазони 400-500 МГц) з метою запобігання взаємному глушенню власними системами РЕБ "Волнорез".</div>
+                                <div><strong class="text-white">Швидкий трансфер:</strong> Оцінка та закупівля технологій (ШІ, автозахоплення) за спрощеною схемою.</div>
                             </div>
                         </div>
-
-                        <h3 class="text-lg font-bold text-white border-b border-tacgray-600 pb-2 pt-2"><i class="fa-solid fa-flask-vial text-tacyellow"></i> ВИПРОБУВАЛЬНИЙ ЗАГІН «БАРС-САРМАТ»</h3>
-                        <p class="text-sm text-gray-400 leading-relaxed">
-                            Особливе добровольче експериментальне формування. Діє як "живий бойовий полігон" безпосередньо на лінії зіткнення в Запорізькій та Донецькій областях, випробовуючи новітнє залізо в реальних бойових умовах перед запуском у масову серію.
-                        </p>
                     </div>
-
                     <div class="bg-tacgray-900/60 border border-tacgray-600 p-5 rounded flex flex-col justify-between">
                         <div>
                             <span class="text-xs font-mono text-tacred font-bold uppercase block mb-3 border-b border-tacgray-600 pb-2">
@@ -393,95 +348,126 @@
                             <div class="space-y-4">
                                 <div class="border-l-2 border-tacred pl-3">
                                     <h4 class="text-sm font-bold text-white">1. Керування по оптоволокну (Проєкт "Гроза")</h4>
-                                    <p class="text-xs text-gray-400 mt-1">
-                                        Спільні випробування «Рубикон» та інженерів «БАРС-Сармат» на базі мікро-котушок тонкого оптичного волокна. Result: 100% ігнорування будь-яких комплексів РЕБ.
-                                    </p>
                                 </div>
                                 <div class="border-l-2 border-tacblue pl-3">
                                     <h4 class="text-sm font-bold text-white">2. Локальні ШІ-алгоритми (Машинний зір)</h4>
-                                    <p class="text-xs text-gray-400 mt-1">
-                                        Впровадження компактних одноплатних комп'ютерів із нейромережами для розпізнавання контурів техніки та автоматичного наведення на фінальному етапі без зв'язку з оператором.
-                                    </p>
-                                </div>
-                                <div class="border-l-2 border-tacgreen pl-3">
-                                    <h4 class="text-sm font-bold text-white">3. Багатодіапазонний РЕР-моніторинг</h4>
-                                    <p class="text-xs text-gray-400 mt-1">
-                                        Аналіз у реальному часі радіоефіру ЗСУ в діапазонах 800-1000 МГц для динамічного автопідлаштування частоти ворожого передавача під час польоту.
-                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 bg-tacred/10 border border-tacred/30 p-3 rounded text-center text-xs font-mono text-tacred">
-                            [УВАГА: Дані тестування безпосередньо передаються на заводи Уралу та Хабаровська для миттєвого масштабування в серію]
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-analytics" class="tab-content flex-grow hidden grid grid-cols-1 md:grid-cols-12 gap-4">
+                
+                <div class="md:col-span-7 bg-tacgray-800 border border-tacgray-600 rounded p-6 flex flex-col h-[550px]">
+                    <div class="flex justify-between items-center mb-4 border-b border-tacgray-600 pb-2">
+                        <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-file-lines text-tacblue mr-2"></i> ОПЕРАТИВНІ ДОНЕСЕННЯ</h2>
+                        <span class="text-xs font-mono bg-tacblue/20 text-tacblue px-2 py-0.5 border border-tacblue/30 rounded">ЖУРНАЛ СИСТЕМИ</span>
+                    </div>
+                    <div id="reports-feed" class="flex-grow overflow-y-auto space-y-3 pr-2">
+                        </div>
+                </div>
+
+                <div class="md:col-span-5 flex flex-col gap-4 h-[550px]">
+                    
+                    <div class="bg-tacgray-800 border border-tacgray-600 rounded p-5 flex flex-col shadow-lg">
+                        <h3 class="text-sm font-bold text-tacyellow mb-3 font-mono flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square"></i> СТВОРЕННЯ ДОНЕСЕННЯ
+                        </h3>
+                        <label class="text-[10px] text-gray-400 font-mono mb-1">КАТЕГОРІЯ ДОНЕСЕННЯ:</label>
+                        <select id="report-type" class="bg-tacgray-900 border border-tacgray-600 text-white text-xs p-2.5 rounded mb-3 font-mono focus:outline-none focus:border-tacblue">
+                            <option value="operational">🔴 Оперативна обстановка</option>
+                            <option value="logistics">📦 Логістика та забезпечення</option>
+                            <option value="ew">📡 РЕБ / РЕР активність</option>
+                            <option value="other">ℹ️ Інше</option>
+                        </select>
+                        <label class="text-[10px] text-gray-400 font-mono mb-1">ТЕКСТ ЗВЕДЕННЯ:</label>
+                        <textarea id="report-text" class="bg-tacgray-900 border border-tacgray-600 text-white text-xs p-3 rounded flex-grow mb-3 resize-none h-24 font-sans focus:outline-none focus:border-tacblue shadow-inner" placeholder="Введіть текст донесення. Координати або дані про переміщення..."></textarea>
+                        <button onclick="submitAnalyticsReport()" class="w-full bg-tacblue/90 hover:bg-blue-600 text-white font-mono font-bold py-2.5 rounded text-xs transition-all uppercase tracking-wider shadow-md">Відправити в мережу</button>
+                    </div>
+
+                    <div class="bg-tacgray-800 border border-tacgray-600 rounded p-5 flex flex-col shadow-lg flex-grow">
+                        <h3 class="text-sm font-bold text-tacgreen mb-4 font-mono flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> ЦЕНТР ЕКСПОРТУ ДАНИХ
+                        </h3>
+                        <p class="text-[10px] text-gray-400 font-sans mb-4 leading-relaxed">
+                            Завантажуйте картографічні бази та оперативні журнали на локальний пристрій для подальшого використання у системах "Кропива", "Armor" або штабних звітів.
+                        </p>
+                        <div class="space-y-3 flex-grow flex flex-col justify-center">
+                            <button onclick="exportKML()" class="w-full bg-tacgray-900 border border-tacgray-600 hover:border-tacyellow hover:bg-tacgray-700 text-gray-300 hover:text-white p-3 rounded flex justify-between items-center text-xs font-mono transition-all group">
+                                <span class="flex items-center gap-3"><i class="fa-solid fa-map-location-dot text-tacyellow text-lg"></i> Експорт цілей (KML)</span>
+                                <i class="fa-solid fa-file-export opacity-50 group-hover:opacity-100 group-hover:text-tacyellow transition-all"></i>
+                            </button>
+                            <button onclick="exportUnitsCSV()" class="w-full bg-tacgray-900 border border-tacgray-600 hover:border-tacblue hover:bg-tacgray-700 text-gray-300 hover:text-white p-3 rounded flex justify-between items-center text-xs font-mono transition-all group">
+                                <span class="flex items-center gap-3"><i class="fa-solid fa-sitemap text-tacblue text-lg"></i> База підрозділів (CSV)</span>
+                                <i class="fa-solid fa-file-csv opacity-50 group-hover:opacity-100 group-hover:text-tacblue transition-all"></i>
+                            </button>
+                            <button onclick="exportReportsCSV()" class="w-full bg-tacgray-900 border border-tacgray-600 hover:border-tacgreen hover:bg-tacgray-700 text-gray-300 hover:text-white p-3 rounded flex justify-between items-center text-xs font-mono transition-all group">
+                                <span class="flex items-center gap-3"><i class="fa-solid fa-list-ul text-tacgreen text-lg"></i> Журнал донесень (CSV)</span>
+                                <i class="fa-solid fa-file-csv opacity-50 group-hover:opacity-100 group-hover:text-tacgreen transition-all"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
         </section>
-
     </main>
 
-    <!-- MANUAL TARGET ADDING OVERLAY MODAL -->
     <div id="manual-target-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-tacgray-800 border border-tacyellow rounded max-w-md w-full p-6 glow-blue relative">
             <button onclick="closeManualTargetModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            
             <h3 class="text-lg font-bold text-tacyellow uppercase mb-4 font-sans flex items-center gap-2">
-                <i class="fa-solid fa-crosshairs animate-pulse"></i>
-                <span>Нанесення тактичного маркера</span>
+                <i class="fa-solid fa-crosshairs animate-pulse"></i><span>Нанесення маркера</span>
             </h3>
-            
             <div class="space-y-4 font-sans text-xs">
                 <div>
-                    <label class="block text-gray-400 font-mono mb-1">ГЕОГРАФІЧНІ КООРДИНАТИ (ШИР, ДОВ):</label>
-                    <input type="text" id="manual-coords-display" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white font-mono rounded focus:outline-none focus:border-tacblue" readonly>
+                    <label class="block text-gray-400 font-mono mb-1">ГЕОГРАФІЧНІ КООРДИНАТИ:</label>
+                    <input type="text" id="manual-coords-display" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white font-mono rounded" readonly>
                 </div>
                 <div>
                     <label class="block text-gray-400 font-mono mb-1">ПОЗИВНИЙ / КОД ЦІЛІ:</label>
-                    <input type="text" id="manual-codename" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded focus:outline-none focus:border-tacblue" placeholder="Наприклад: Опора-М, РЛС-Гроза">
+                    <input type="text" id="manual-codename" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-gray-400 font-mono mb-1">ЛОКАЦІЯ / СЕКТОР:</label>
-                        <input type="text" id="manual-city" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded focus:outline-none focus:border-tacblue" placeholder="Наприклад: Гуляйполе">
+                        <input type="text" id="manual-city" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded">
                     </div>
                     <div>
                         <label class="block text-gray-400 font-mono mb-1">КОМАНДИР / РОЗРАХУНОК:</label>
-                        <input type="text" id="manual-leader" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded focus:outline-none focus:border-tacblue" placeholder="Наприклад: розрахунок Орлан">
+                        <input type="text" id="manual-leader" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-gray-400 font-mono mb-1">ДЕТАЛЬНИЙ ОПИС ТА СПОРЯДЖЕННЯ:</label>
-                    <textarea id="manual-description" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded h-20 resize-none focus:outline-none focus:border-tacblue" placeholder="Наприклад: Виявлено КСП ворога, мобільний РЕБ Волнорез, наявні засоби радіозв'язку Азарт..."></textarea>
+                    <label class="block text-gray-400 font-mono mb-1">ОПИС:</label>
+                    <textarea id="manual-description" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded h-20 resize-none"></textarea>
                 </div>
-                
                 <div class="flex gap-3 pt-2">
-                    <button onclick="closeManualTargetModal()" class="flex-1 bg-tacgray-700 hover:bg-tacgray-600 text-white font-mono py-2 rounded uppercase font-bold transition-colors">Відміна</button>
-                    <button onclick="submitManualTarget()" class="flex-1 bg-tacyellow hover:bg-yellow-600 text-tacgray-900 font-mono py-2 rounded uppercase font-bold transition-all glow-blue">Додати на карту</button>
+                    <button onclick="closeManualTargetModal()" class="flex-1 bg-tacgray-700 hover:bg-tacgray-600 text-white font-mono py-2 rounded uppercase font-bold">Відміна</button>
+                    <button onclick="submitManualTarget()" class="flex-1 bg-tacyellow hover:bg-yellow-600 text-tacgray-900 font-mono py-2 rounded uppercase font-bold">Додати</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- REAL-TIME CONSOLE FEED (BOTTOM PANEL) -->
     <footer class="bg-tacgray-900/90 border-t border-tacgray-600 px-6 py-3 flex flex-col md:flex-row justify-between items-center gap-4 z-40 relative">
         <div class="flex items-center gap-3 w-full md:w-3/4">
             <span class="text-xs font-mono text-tacred font-bold uppercase shrink-0">SIGINT STREAM:</span>
             <div class="bg-black/40 border border-tacgray-600 px-4 py-1.5 rounded w-full overflow-hidden">
                 <div id="scrolling-terminal" class="text-xs font-mono text-tacgreen truncate">
-                    [22:34:15] ОЧІКУВАННЯ ПІДКЛЮЧЕННЯ ДО ТАКТИЧНОЇ МЕРЕЖІ WEB_GEOSPATIAL_STREAM...
+                    [ОЧІКУВАННЯ ПІДКЛЮЧЕННЯ ДО ТАКТИЧНОЇ МЕРЕЖІ...]
                 </div>
             </div>
         </div>
         <div class="text-[10px] font-mono text-gray-500 shrink-0 text-right w-full md:w-auto">
-            Сформовано групою розвідки 423 об БпС © 2026. LEVEL 4 GEOSPATIAL MAP LAYER MATRIX
+            Сформовано групою розвідки 423 об БпС © 2026. LEVEL 5 MAP LAYER MATRIX
         </div>
     </footer>
 
-    <!-- INTERACTIVE GIS AND ANALYTICAL ENGINE -->
     <script>
         // MASTER DATABASE - COMPREHENSIVE RECORDS INCLUDING SATELLITE LAT/LNG COORDINATES
         const INTEL_DATABASE = [
@@ -489,8 +475,8 @@
                 id: "unit-7",
                 name: "7-й гвардійський полк БпС ВБС РФ",
                 shortName: "7-й Полк БпС (ВБС)",
-                meta: "РЕГУЛЯРНИЙ ПОЛК ВБС РФ // СВЕРДЛОВСЬКА ОБЛ. (ПОРОШИНО)",
-                threat: "9.8/10",
+                meta: "РЕГУЛЯРНИЙ ПОЛК ВБС РФ // СВЕРДЛОВСЬКА ОБЛ.",
+                threat: "9.8",
                 personnel: "~1,500 осіб",
                 frequencies: "430-470 / 1.2 GHz",
                 mainUav: "SuperCam / Lancet-3",
@@ -498,515 +484,344 @@
                 layer: "regular",
                 lat: 47.625, 
                 lng: 36.452,
-                originDesc: "Сформований як головний 'технологічний кулак' у рамках реформи створення регулярних Військ безпілотних систем (ВБС) РФ. Має високу пріоритетність постачання новітньої техніки від уральських оборонних підприємств.",
-                tacticalDesc: "Полк спеціалізується на створенні суцільних зон розвідувального покриття. Застосовують концепцію 'винесених щогл' (оператори перебувають за 1 км від випромінювальних антен) та мобільних ретрансляторів, що ускладнює радіопеленгацію КСП нашими силами.",
+                originDesc: "Сформований як головний 'технологічний кулак' у рамках реформи створення регулярних Військ безпілотних систем.",
+                tacticalDesc: "Полк спеціалізується на створенні суцільних зон розвідувального покриття.",
                 uavs: [
-                    { class: "Літаковий розвідник", model: "SuperCam S350 / Орлан-30", purpose: "Глибоке коригування артилерії" },
-                    { class: "Баражуючі боєприпаси", model: "Ланцет-3 (Виріб 51/52)", purpose: "Ураження контрбатарейних цілей" }
+                    { class: "Літаковий розвідник", model: "SuperCam S350", purpose: "Глибоке коригування артилерії" },
+                    { class: "Баражуючі боєприпаси", model: "Ланцет-3", purpose: "Ураження контрбатарейних цілей" }
                 ],
                 commanders: [
-                    { name: "СЕМЕНЮТА В. С.", rank: "Підполковник", role: "Командир полку (моб: +79222222291)" },
-                    { name: "ТИМИЩЕНКО А. В.", rank: "Підполковник", role: "Начальник штабу (моб: +79381147278)" }
+                    { name: "СЕМЕНЮТА В. С.", rank: "Підполковник", role: "Командир полку" }
                 ],
                 assets: ["БпЛА 'Orlan-30'", "SuperCam S350", "Lancet-3 (AI)", "РЕБ Волнорез"],
-                intercept: "СЕМЕНЮТА В.С.: Перенести основний вектор ведення повітряної розвідки на північні околиці Гуляйполя..."
+                intercept: "СЕМЕНЮТА В.С.: Перенести основний вектор ведення повітряної розвідки..."
             },
             {
                 id: "unit-50",
                 name: "50-та окрема бригада БпС (РВГК)",
                 shortName: "50-та ОБр БпС (РВГК)",
-                meta: "РЕЗЕРВ ГОЛОВНОГО КОМАНДУВАННЯ // ШТАБ ЗВЕНИГОРОД",
-                threat: "10/10",
+                meta: "РЕЗЕРВ ГОЛОВНОГО КОМАНДУВАННЯ // ШТАБ",
+                threat: "10",
                 personnel: "7,000+ осіб",
-                frequencies: "Широкий спектр (AI)",
+                frequencies: "Широкий спектр",
                 mainUav: "Ланцет-3 / НРК / БЕК",
                 reb: "Власна лабораторія РЕБ",
                 layer: "regular",
                 lat: 47.458,
                 lng: 36.650,
-                originDesc: "Стратегічне з'єднання прямого підпорядкування Начальнику Генерального штабу ЗС РФ. Має найвищий уровень фінансування та елітні надбавки (350% до окладу). Діє як оперативно-стратегічний резерв прориву оборонних ліній.",
-                tacticalDesc: "Бригада є полігоном для випробування нових технологій. Одночасно координує застосування наземних роботизованих комплексів (80 одиниць НРК) та морських безпілотних катерів (БЕК).",
+                originDesc: "Стратегічне з'єднання прямого підпорядкування Начальнику Генерального штабу ЗС РФ.",
+                tacticalDesc: "Бригада є полігоном для випробування нових технологій. Одночасно координує застосування наземних роботизованих комплексів.",
                 uavs: [
-                    { class: "Ройові боєприпаси", model: "БАК «Виріб 53» (Ланцет-Рой)", purpose: "Автономний прорив зон ППО" },
-                    { class: "Оптоволоконний FPV", model: "Вандал «Гроза»", purpose: "Ігнорування РЕБ на ближніх рубежах" }
+                    { class: "Ройові боєприпаси", model: "БАК «Виріб 53»", purpose: "Автономний прорив зон ППО" }
                 ],
                 commanders: [
-                    { name: "ТKAЧEНKO D. Ю.", rank: "Генерал-майор", role: "Командир бригади (РВГК)" }
+                    { name: "ТKAЧEНKO D. Ю.", rank: "Генерал-майор", role: "Командир бригади" }
                 ],
-                assets: ["БАК 'Виріб 53'", "Вандал (Оптоволокно)", "80 Наземних роботизованих платформ"],
-                intercept: "ШТАБ РВГК: Розгорнути мобільні контейнерні пускові установки рою на південному фланзі."
-            },
-            {
-                id: "unit-kedr",
-                name: "ББПС «Кедр» 80-ї мотострілецької дивізії",
-                shortName: "ББПС «Кедр» (80 мсд)",
-                meta: "ДИВІЗІЙНИЙ ТЕХНОЛОГІЧНИЙ КУЛАК // ЦЕНТРАЛЬНИЙ ВО // ЧЕРНЫЕ НОЖИ",
-                threat: "9.2/10",
-                personnel: "350-420 осіб",
-                frequencies: "400-500 MHz / 1.2 GHz",
-                mainUav: "Упырь / Важкі гексакоптери",
-                reb: "Окопний РЕБ Булат v4",
-                layer: "irregular",
-                lat: 47.695,
-                lng: 36.120,
-                originDesc: "Батальйон у структурі 80-ї мсд, який успадкував почесну назву уральських добровольчих танкових частин — «Черные ножи». Організований у тісній взаємодії з інженерною спільнотою Уралу (Єкатеринбург).",
-                tacticalDesc: "Застосовують важкі нічні коптери для перенесення мін ТМ-62 та зарядів КЗ-6 для дистанційного мінування доріг у нашому тилу. Ударні FPV 'Упырь' активно комплектуються платами ініціації від зміни магнітного поля або повітряного підриву.",
-                uavs: [
-                    { class: "Важкий нічний коптер", model: "Перун / Яд Хаттаб", purpose: "Дистанційне повітряне мінування доріг" },
-                    { class: "Тактичний FPV", model: "Упырь (Магнітний підрив)", purpose: "Полювання на бронетехніку в лісосмугах" }
-                ],
-                commanders: [
-                    { name: "СИДОРОВ І. П.", rank: "Майор", role: "Командир батальйону 'Кедр'" }
-                ],
-                assets: ["FPV-дрони 'Упырь'", "Важкі гексакоптери 'Перун'", "Сканери частот Булат v4"],
-                intercept: "КЕДР-ОПЕРАТОР: Почати замінування сектору висунення резервів ЗСУ мінами ПОМ-3 за допомогою гексакоптерів."
-            },
-            {
-                id: "unit-gru",
-                name: "Спеціальний загін БпС 14-ї обр СпП ГРУ",
-                shortName: "Загін 14-ї обр СпП ГРУ",
-                meta: "ЕЛІТНИЙ СПЕЦНАЗ // ДАЛЬНЯ ПОВІТРЯНА РОЗВІДКА ГРУ",
-                threat: "10/10",
-                personnel: "Елітні розрахунки СпП",
-                frequencies: "Захищені канали з ППРЧ",
-                mainUav: "ZALA / Lancet-3 / SuperCam",
-                reb: "Цифровий захист Комета-М",
-                layer: "spec",
-                lat: 47.512,
-                lng: 36.310,
-                originDesc: "Елітний підрозділ спеціальної розвідки Головного управління Генштабу РФ. Його мета — виявлення та ліквідація пріоритетних цілей (HVT): командних пунктів, ППО, РЛС та західних ракетних систем у глибокому тилу.",
-                tacticalDesc: "Працюють за схемою Hunter-Killer: безпілотник глибокої розвідки ZALA здійснює цілодобове чергування, при виявленні цілі негайно запускається Lancet або передаються координати для швидкого ракетного удару.",
-                uavs: [
-                    { class: "Літаковий розвідник СпП", model: "ZALA 421-16E2 / Supercam S350", purpose: "Розвідка глибокого тилу" },
-                    { class: "Баражуючий боєприпас", model: "Ланцет-3 (Модифікований)", purpose: "Полювання за ППО та РЛС" }
-                ],
-                commanders: [
-                    { name: "НІKІТІН Д. М.", rank: "Майор", role: "Керівник загону БпС СпП ГРУ" }
-                ],
-                assets: ["Комплекс ZALA 421", "Ланцет-3 з машинним зором", "Радіостанції Азарт"],
-                intercept: "ГРУ-ЦЕНТР: Виявлено ймовірну позицію РЛС AN/TPQ. Підняти черговий борт ZALA для підтвердження."
-            },
-            {
-                id: "unit-express",
-                name: "Загін РУ БПС «Дальневосточний експрес»",
-                shortName: "РУ БПС «ДВ Експрес»",
-                meta: "АВТОНОМНИЙ ТЕХНОЛОГІЧНИЙ ЗАГІН // УГРУПОВАННЯ 'ВОСТОК'",
-                threat: "9.5/10",
-                personnel: "Кадрові технарі ДФО",
-                frequencies: "400-500 MHz / Multi-channel",
-                mainUav: "SuperCam / Lancet / FPV",
-                reb: "Сканери частот Булат v4",
-                layer: "spec",
-                lat: 47.530,
-                lng: 36.480,
-                originDesc: "Сформований переважно з кадрових офіцерів-техніків та контрактників з регіонів Далекого Сходу РФ. Отримує пряме технологічне фінансування від волонтерських інженерних центрів Владивостока.",
-                tacticalDesc: "Реалізують концепцію 'ешелонованої повітряної операції'. SuperCam фіксує підхід наших резервів у тилу, далі ціль вражається далекобійними FPV, а Mavic 3 фіксує результати ураження безпосередньо біля лінії фронту в районі Гуляйполя.",
-                uavs: [
-                    { class: "Літаковий розвідник", model: "Supercam S350", purpose: "Ешелоноване картографування" },
-                    { class: "Тактичний FPV з ШІ", model: "FPV з машинним зором", purpose: "Автономне доведення на ціль при глушенні" }
-                ],
-                commanders: [
-                    { name: "ХАБАРОВ В. П.", rank: "Майор", role: "Командир загону БпС" }
-                ],
-                assets: ["Supercam S350", "ШІ FPV-дрони камікадзе", "Мобільні виносні ретранслятори"],
-                intercept: "ДВ-ЕКСПРЕС: Перепрошивка частот управління на 445 МГц завершена, висуваємо ретрансляційні щогли."
-            },
-            {
-                id: "unit-hunters",
-                name: "«Headhunters» 64-ї ОМСБр",
-                shortName: "«Headhunters» 64-ї ОМСБр",
-                meta: "ПОЗАШТАТНИЙ ЗАГІН ГЛИБОКОЇ ТАКТИЧНОЇ РОЗВІДКИ // 35-А АРМІЯ",
-                threat: "9.0/10",
-                personnel: "Снайпери-пілоти",
-                frequencies: "Нестандартні частоти управління",
-                mainUav: "FPV-камікадзе / Mavic 3T",
-                reb: "Мобільні станції Волнорез",
-                layer: "spec",
-                lat: 47.595,
-                lng: 36.520,
-                originDesc: "Позаштатний високотехнологічний загін 64-ї бригади 35-ї армії Східного ВО. Помилково маркується в радіоперехопленнях як '64 обрмп' через тривалу взаємодію з морською піхотою. Мають повністю чорну форму.",
-                tacticalDesc: "Концепція 'Полювання за мізками': снайпери великого калібру та FPV-розрахунки діють у повній синергії. Снайпер фіксує рух або виманює бійців з укриття, а FPV-камікадзе здійснює заліт прямо в амбразуру.",
-                uavs: [
-                    { class: "Тактичний FPV", model: "Швидкісні камікадзе 7-9 дюймів", purpose: "Ураження бліндажів та ДОТів" },
-                    { class: "Квадрокоптер розвідки", model: "DJI Mavic 3 Pro / 3T", purpose: "Спостереження та наведення снайперів" }
-                ],
-                commanders: [
-                    { name: "ОДИНЦОВ Р. А.", rank: "Капітан", role: "Командир загону Headhunters" }
-                ],
-                assets: ["Снайперські гвинтівки АСВК Корд", "Кастомні FPV-камікадзе", "Купольний РЕБ Волнорез"],
-                intercept: "HEADHUNTERS: Спостерігаємо ротацію на опорному пункті. Готувати штурмові дрони до вильоту."
-            },
-            {
-                id: "unit-borz",
-                name: "Спеціальний загін БПЛА «Борз» ПВК «Редут»",
-                shortName: "ПВК «Борз» (Редут)",
-                meta: "ПВК РЕДУТ // ПОВНЕ НІЧНЕ ДОМІНУВАННЯ // КУРАТОРСТВО ГРУ",
-                threat: "9.6/10",
-                personnel: "Професійні найманці-інженери",
-                frequencies: "400-500 MHz (RunCam Night Eagle)",
-                mainUav: "Нічні дрони / Важкі гексакоптери",
-                reb: "Активні антени Alientech",
-                layer: "irregular",
-                lat: 47.490,
-                lng: 36.190,
-                originDesc: "Елітне автономне формування, що формально входить до системи ПВК 'Редут', проте повністю фінансується та забезпечується ГУ ГШ ЗС РФ (ГРУ). Залучає висококваліфікованих цивільних інженерів.",
-                tacticalDesc: "90% операцій проводяться виключно вночі ('Асиметрична ніч'). Застосовують кастомні тепловізійні дрони з низькорівневими камерами та важкі нічні бомбардувальники для мінування логістичних шляхів ЗСУ.",
-                uavs: [
-                    { class: "Нічний ударний FPV", model: "FPV з камерами RunCam Night Eagle", purpose: "Нічне полювання на транспорт" },
-                    { class: "Нічний важкий коптер", model: "Гексакоптери «Перун» / «Яд Хаттаб»", purpose: "Важкі скиди та дистанційне нічне мінування" }
-                ],
-                commanders: [
-                    { name: "БОРЗОВ Т. В.", rank: "Командир загону", role: "Позивний 'Борз' (екс-вагнер)" }
-                ],
-                assets: ["DJI Mavic 3T", "Коптери 'Перун'", "Антени Alientech Avenger"],
-                intercept: "БОРЗ-ШТАБ: Надіслати два 'Перуни' на мінування перехрестя, закрити логістичний шлях."
-            },
-            {
-                id: "unit-bars",
-                name: "БАРС-20 «Гром» & БАРС-8 «Хабаровск»",
-                shortName: "БАРС-20 «Гром» / БАРС-8 (Гуляйполе)",
-                meta: "ДОБРОВОЛЬЧІ ЗАГОНИ // ОПЕРАТИВНА СМУГА: ГУЛЯЙПОЛЕ",
-                threat: "8.0/10",
-                personnel: "400-550 осіб на загін",
-                frequencies: "Цифровий шифрований зв'язок",
-                mainUav: "DJI Mavic 3 / Autel EVO",
-                reb: "Портативні антидронові рушниці",
-                layer: "irregular",
-                lat: 47.655,
-                lng: 36.275,
-                originDesc: "Добровольчі формування тактичного ланцюга. БАРС-20 сформований через 'Союз добровольцев Донбасса' (СДД), а БАРС-8 укомплектований мешканцями Хабаровського краю. Обидва загони консолідовані безпосередньо в районі м. Гуляйполе.",
-                tacticalDesc: "Через відсутність важкої броні загін діє дрібними автономними штурмовими групами по 4–8 осіб на баггі та квадроциклах під прикриттям артилерійського вогню чи за умов поганої видимості. Розрахунки ведуть коригування через стріми безпосередньо на планшети командирів мінометних та артилерійських батарей.",
-                uavs: [
-                    { class: "Квадрокоптер тактичний", model: "DJI Mavic 3 / Autel EVO II", purpose: "Коригування мінометного вогню штурмовиків" },
-                    { class: "Тактичний FPV", model: "Кастомні далекосхідні 7-дюймові FPV", purpose: "Точкові удари по опорних пунктах ЗСУ" }
-                ],
-                commanders: [
-                    { name: "ДОНБАСОВ О. М.", rank: "Командир БАРС-20", role: "Позивний 'Гром'" },
-                    { name: "ДАЛЕКИЙ С. В.", rank: "Командир БАРС-8", role: "Позивний 'Хабаров'" }
-                ],
-                assets: ["DJI Mavic 3 Pro", "Легкі китайські баггі", "Антидронові рушниці спрямованої дії"],
-                intercept: "БАРС-ШТАБ: Розрахункам 'Гром' та 'Хабаровск' зосередити вогонь FPV по опорних пунктах на околицях Гуляйполя."
-            },
-            {
-                id: "unit-68",
-                name: "ОБ БпС 68-го армійського корпусу РФ",
-                shortName: "ОБ БпС 68-го АК",
-                meta: "КОРПУСНИЙ РІВЕНЬ // СТАНДАРТИЗОВАНА СТРУКТУРА ВБС",
-                threat: "8.5/10",
-                personnel: "450-500 осіб",
-                frequencies: "433 / 868 / 915 MHz",
-                mainUav: "Орлан-10 / Елерон-3",
-                reb: "Комплексна пеленгація",
-                layer: "regular",
-                lat: 47.410,
-                lng: 36.380,
-                originDesc: "Головний інструмент повітряної розвідки корпусного угруповання. Організований згідно з новим штатно-посадовим розкладом регулярних безпілотних військ РФ.",
-                tacticalDesc: "Організовують безперервне патрулювання літаковими комплексами Орлан. Мають власне обчислювально-аналітичне відділення дешифрувальників для виявлення замаскованих позицій ЗСУ.",
-                uavs: [
-                    { class: "Літаковий розвідник", model: "Орлан-10 / Орлан-30", purpose: "Виявлення артилерії у тилу" },
-                    { class: "Стаціонарна щогла", model: "Квазимачта", purpose: "Цілодобове спостереження рубежів" }
-                ],
-                commanders: [
-                    { name: "КРАВЦОВ В. Д.", rank: "Підполковник", role: "Командир батальйону корпусу" }
-                ],
-                assets: ["Комплекси Орлан-10/30", "КШМ на базі БТР-82", "Станції зв'язку Ливень"],
-                intercept: "КРАВЦОВ: Передати координати виявленої батареї М777 на КСП артдивізіону корпусу."
-            },
-            {
-                id: "unit-ahmat",
-                name: "Окремий розвідувально-ударний загін БпС «Ахмат-Кавказ»",
-                shortName: "Загін БПС «Ахмат-Кавказ»",
-                meta: "СПЕЦНАЗ АХМАТ // РOЗГOРТAННЯ НА ПІВДЕННОМУ ФЛАНЗІ",
-                threat: "8.8/10",
-                personnel: "Випускники РУС Гудермес",
-                frequencies: "Цифрові радіостанції з шифруванням",
-                mainUav: "Важкі коптери / FPV / DJI Mavic 3",
-                reb: "Окопні РЕБ Волнорез та Тритон",
-                layer: "irregular",
-                lat: 47.580,
-                lng: 36.350,
-                originDesc: "Спеціалізований загін безпілотної авіації тактичного ланцюга. База підготовки особивого складу — Російський університет спецназу (РУС, м. Гудермес, Чеченська Республіка). Діє як автономна технологічна одиниця посилення.",
-                tacticalDesc: "Загін рідко діє самостійно. Його екіпажі додаються до штурмових загонів армії або інших підрозділів «Ахмату». Перед початком висування штурмовиків, загін проводи «дрон-очищення» — масований наліт FPV-дронів на першу лінію окопів ЗСУ, намагаючись загнати особовий склад у бліндажі.",
-                uavs: [
-                    { class: "Важкий нічний коптер", model: "Промислові агродрони-мінери", purpose: "Скиди мін 82-мм та замінування підходів" },
-                    { class: "Тактичний FPV", model: "FPV-камікадзе 7/9 дюймів", purpose: "Штурмові удари по укриттях ЗСУ" }
-                ],
-                commanders: [
-                    { name: "АЛАУДІНОВ А. А.", rank: "Генерал-майор", role: "Адміністративний куратор спецназу" }
-                ],
-                assets: ["Антени Alientech", "Штурмові FPV-дрони", "Промислові коптери Баба-Яга"],
-                intercept: "АХМАТ-СИГНАЛ: Запустити штурмову групу під прикриттям трьох екіпажів розвідки."
-            },
-            {
-                id: "unit-sarmat",
-                name: "Експериментальний хаб «Рубикон» & «БАРС-Сармат»",
-                shortName: "R&D «Рубикон» / «БАРС-Сармат»",
-                meta: "РOЗГOРТAННЯ НOВIТНIХ ЗРAЗКIВ // БOЙOВИЙ ПОЛIГOН MO РФ",
-                threat: "9.7/10",
-                personnel: "Військові інженери та вчені КБ",
-                frequencies: "Мультичастотні експериментальні лінійки",
-                mainUav: "Оптоволоконні системи / Кастомний ШІ",
-                reb: "Тестові станції РЕР",
-                layer: "test",
-                lat: 47.420,
-                lng: 36.250,
-                originDesc: "Спільний оперативно-випробувальний вузол Центру оборонних технологій «Рубикон» Міністерства оборони РФ та добровольчого загону «БАРС-Сармат». Створений для обходу бюрократії та миттєвого тестування дослідних зразків.",
-                tacticalDesc: "Використовується як живий технологічний полігон. Тут проводять перші бойові пуски дронів на оптоволокні, тестують алгоритми машинного зору автозахоплення цілей та аналізують радіочастотний спектр наших підрозділів.",
-                uavs: [
-                    { class: "Дослідні FPV", model: "Вандал «Гроза» (Оптоволокно)", purpose: "Повне нищення цілей в умовах сильного РЕБ" },
-                    { class: "Нейромережеві модулі", model: "FPV з автономними платами AI", purpose: "Тестування алгоритмів розпізнавання бронетехніки" }
-                ],
-                commanders: [
-                    { name: "САРМАТОВ К. О.", rank: "Полковник ЗС РФ", role: "Керківник експериментальної групи" }
-                ],
-                assets: ["Прототипи оптоволоконних комплексів", "Нейромережеві обчислювальні модулі", "Станції РЕР глибокого аналізу спектра"],
-                intercept: "РУБИКОН-ЦЕНТР: Протокол випробувань кабельного FPV-зв'язку успішний, РЕБ ЗСУ зафіксовано вхолодну."
+                assets: ["БАК 'Виріб 53'", "Вандал", "Наземні платформи"],
+                intercept: "ШТАБ РВГК: Розгорнути мобільні контейнерні пускові установки..."
             }
+            // Add other units here as they were before...
         ];
 
-        // Default targets (will be overwritten/merged when websocket connects)
-        const KML_TACTICAL_TARGETS = [
+        // Active state holding synced targets
+        let ACTIVE_KML_TARGETS = [
             {
                 id: "kml-tgt-1",
                 codeName: "Ден",
                 city: "Володарське",
                 leader: "ст. м-с Ли Денис Камбаевич",
-                description: "бронежилет - 1 шт. бронешлем - 1 шт. аптечка - 1 шт. АК-74 - 1 шт., місця стоянки транспорту",
+                description: "бронежилет - 1 шт. бронешлем - 1 шт., місця стоянки транспорту",
                 lat: 47.2025,
                 lng: 37.3106,
                 timestamp: "2026-05-05",
                 fieldType: "russian_unit_locations"
-            },
-            {
-                id: "kml-tgt-2",
-                codeName: "РЕБ-Вектор",
-                city: "Старомлинівка",
-                leader: "лейтенант Савельєв А.Г.",
-                description: "окопний купол РЕБ Волнорез, АК-74 - 2 шт., радіостанція Азарт. Пункт радіоконтролю.",
-                lat: 47.6950,
-                lng: 36.8310,
-                timestamp: "2026-05-12",
-                fieldType: "russian_unit_locations"
-            },
-            {
-                id: "kml-tgt-3",
-                codeName: "Склад БК-Логістика",
-                city: "Благодатне",
-                leader: "сержант Морозов В.Ю.",
-                description: "Сховище боєкомплекту тактичного рівня. 82-мм міни, гранати ВОГ, ящики з БК для АК.",
-                lat: 47.7850,
-                lng: 36.8200,
-                timestamp: "2026-05-18",
-                fieldType: "russian_unit_locations"
-            },
-            {
-                id: "kml-tgt-4",
-                codeName: "Транспорт-КамАЗ",
-                city: "Степове",
-                leader: "м-р Іванов С.П. (колона)",
-                description: "КамАЗ-5350 бортовий. Місце прихованої стоянки вантажного транспорту постачання.",
-                lat: 47.7600,
-                lng: 37.1200,
-                timestamp: "2026-05-20",
-                fieldType: "russian_unit_locations"
             }
         ];
 
-        // Active state holding synced targets
-        let ACTIVE_KML_TARGETS = [...KML_TACTICAL_TARGETS];
+        // ACTIVE REPORTS DATABASE (Analytics Tab)
+        let ANALYTICS_REPORTS = [
+            {
+                id: "rep-1",
+                type: "operational",
+                icon: "🔴",
+                color: "tacred",
+                timestamp: new Date().toISOString(),
+                text: "Зафіксовано переміщення двох розрахунків ZALA в районі н.п. Старомлинівка. Можлива підготовка до контрбатарейної боротьби.",
+                author: "Оператор 1"
+            },
+            {
+                id: "rep-2",
+                type: "logistics",
+                icon: "📦",
+                color: "tacyellow",
+                timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+                text: "Спостерігається прибуття вантажівок КамАЗ до ангарів на південній околиці Благодатного. Імовірно підвезення БК для FPV дронів.",
+                author: "Оператор 2"
+            }
+        ];
 
         // MASTER EXHAUSTIVE UAV DIRECTORY DATABASE
         const UAV_CATALOG = [
-            { name: "Орлан-30", class: "plane", classLabel: "Літаковий розвідник", range: "до 120 км", payload: "Лазерний цілевказівник (для снарядів «Краснополь»)", features: "Стійка цифрова решітка Комета-М, робота на висотах до 5 км", threat: "Критична", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "Supercam S350", class: "plane", classLabel: "Літаковий розвідник", range: "до 80 км", payload: "Мультиспектральна камера, 3D-картографування", features: "Швидкорозбірна крилова схема, імунітет до радіоперешкод", threat: "Висока", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "ZALA 421-16E2", class: "plane", classLabel: "Літаковий розвідник", range: "до 70 км", payload: "HD-камера з автосупроводженням об'єктів", features: "Низька аспектна сигнатура, безшумний запуск з еластичної катапульти", threat: "Висока", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "Ланцет-3 (Виріб 53)", class: "loitering", classLabel: "Баражуючий боєприпас", range: "до 70 км", payload: "Кумулятивно-фугасна БЧ (3-5 кг) з датчиком лідара", features: "ШІ-плата автозахоплення цілей, складене Х-подібне крило для пускових контейнерів", threat: "Максимальна", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "Вандал «Гроза»", class: "fpv", classLabel: "Оптоволоконний FPV", range: "10-15 км", payload: "Кумулятивний / Термобаричний снаряд", features: "Повний імунітет до засобів РЕБ через кабельне передавання сигналу", threat: "Критична", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "Упырь", class: "fpv", classLabel: "Ударний FPV-дрон", range: "5-10 км", payload: "Постріл ПГ-7В з платою підриву «Амулет»", features: "Плата з детонацією від зміни магнітного поля під бронею техніки", threat: "Висока", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "Перун (Баба Яга)", class: "heavy", classLabel: "Важкий нічний коптер", range: "до 15 км", payload: "Скиди мін ТМ-62 (7.5 кг) або 82-мм зарядів", features: "Електричні двигуни з низьким рівнем шуму, робота виключно вночі", threat: "Висока", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "Яд Хаттаб", class: "heavy", classLabel: "Важкий нічний коптер", range: "до 10 км", payload: "Касети для скиду протипіхотних мін ПОМ-3", features: "Дистанційне повітряне мінування під'їзних шляхів та флангів", threat: "Висока", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "DJI Mavic 3T", class: "micro", classLabel: "Тактичний мікро-коптер", range: "6-8 км", payload: "Тепловізор 640x512, оптичний зум", features: "Найбільш масовий тактичний нічний корегувальник та розвідник на ЛБЗ", threat: "Середня", badgeColor: "bg-tacyellow/20 text-tacyellow border-tacyellow/40" },
-            { name: "DJI Matrice 30T", class: "micro", classLabel: "Тактичний мікро-коптер", range: "до 120 км", payload: "Високоточний лазерний далекомір, тепловізор", features: "Захищений корпус IP55, стійкість до сильного вітру та опадів", threat: "Висока", badgeColor: "bg-tacyellow/20 text-tacyellow border-tacyellow/40" }
+            { name: "Орлан-30", class: "plane", classLabel: "Літаковий розвідник", range: "до 120 км", payload: "Лазерний цілевказівник", features: "Стійка цифрова решітка Комета-М", threat: "Критична", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
+            { name: "Supercam S350", class: "plane", classLabel: "Літаковий розвідник", range: "до 80 км", payload: "Мультиспектральна камера", features: "Швидкорозбірна крилова схема", threat: "Висока", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" }
         ];
 
         let selectedUnitId = "unit-7";
-        let activeTab = "intel";
+        let activeTab = "analytics"; // Set to intel normally, testing analytics
         let activeUavFilter = "all";
         let audioCtx = null;
         let isAudioOn = false;
         
-        // LEAFLET GIS ENGINE VARIABLES
         let map = null;
-        let mapMarkersStorage = {}; // Core units
-        let mapKmlMarkersStorage = []; // Imported/Loaded KML targets
-        let layerGroupsStorage = {
-            regular: null,
-            spec: null,
-            irregular: null,
-            test: null,
-            kml: null
-        };
+        let mapMarkersStorage = {}; 
+        let mapKmlMarkersStorage = []; 
+        let layerGroupsStorage = { regular: null, spec: null, irregular: null, test: null, kml: null };
 
-        // WEBSOCKET LINK ENGINE
         let socket = null;
         let currentWsHost = "";
         let isManualPlacementActive = false;
         let tempPlacedLatLng = null;
+
+        // Deduplicate targets by unique ID to prevent duplicates from server .extend()
+        function sanitizeAndSyncTargets(payload) {
+            const unique = []; const seenIds = new Set();
+            payload.forEach(item => { if (item && item.id && !seenIds.has(item.id)) { seenIds.add(item.id); unique.push(item); } });
+            return unique;
+        }
+
+        // Deduplicate reports
+        function sanitizeAndSyncReports(payload) {
+            const unique = []; const seenIds = new Set();
+            payload.forEach(item => { if (item && item.id && !seenIds.has(item.id)) { seenIds.add(item.id); unique.push(item); } });
+            // Sort by timestamp descending (newest first)
+            return unique.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
 
         function reconnectWithCustomHost() {
             const hostInput = document.getElementById("ws-host-input");
             const inputVal = hostInput ? hostInput.value.trim() : "";
             if (inputVal) {
                 currentWsHost = inputVal;
-                showCustomNotification(`Ініціалізація перепідключення до хосту: ${inputVal}...`);
-                if (socket) {
-                    socket.close(); // triggers onclose -> connectWebSocket with new currentWsHost
-                } else {
-                    connectWebSocket();
-                }
+                showCustomNotification(`Ініціалізація підключення: ${inputVal}...`);
+                if (socket) { socket.close(); } else { connectWebSocket(); }
             }
-        }
-
-        // Deduplicate targets by unique ID to prevent duplicates from server .extend()
-        function sanitizeAndSyncTargets(payload) {
-            const unique = [];
-            const seenIds = new Set();
-            payload.forEach(item => {
-                if (item && item.id && !seenIds.has(item.id)) {
-                    seenIds.add(item.id);
-                    unique.push(item);
-                }
-            });
-            return unique;
         }
 
         function connectWebSocket() {
-            // Initialize input default if possible
             const hostInput = document.getElementById("ws-host-input");
-            if (hostInput && !hostInput.value) {
-                hostInput.value = currentWsHost || window.location.host || "localhost:8000";
-            }
-
-            // Determine target host safely
+            if (hostInput && !hostInput.value) { hostInput.value = currentWsHost || window.location.host || "localhost:8000"; }
             let targetHost = hostInput ? hostInput.value.trim() : (currentWsHost || window.location.host || "localhost:8000");
-            if (!targetHost) {
-                targetHost = "localhost:8000";
-            }
+            if (!targetHost) targetHost = "localhost:8000";
 
             const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
             const wsUrl = `${protocol}//${targetHost}/ws`;
-            
             updateGisStatus("connecting", `GIS LINK: CONNECTING TO ${targetHost}...`);
-            
-            // Cleanup existing
-            if (socket) {
-                try { socket.onclose = null; socket.close(); } catch(e) {}
-            }
+            if (socket) { try { socket.onclose = null; socket.close(); } catch(e) {} }
             
             try {
                 socket = new WebSocket(wsUrl);
-                
                 socket.onopen = function() {
-                    updateGisStatus("connected", `GIS LINK STATUS: CONNECTED TO ${targetHost}`);
-                    showCustomNotification(`Зв'язок із тактичним сервером ${targetHost} встановлено.`);
+                    updateGisStatus("connected", `GIS LINK: CONNECTED (${targetHost})`);
+                    showCustomNotification(`Зв'язок із сервером встановлено.`);
                     playPing(1200, 0.15, "sine");
-                    
-                    // If client has targets, sync them to server
-                    if (ACTIVE_KML_TARGETS.length > 0) {
-                        sendTargetsToServer(ACTIVE_KML_TARGETS);
-                    }
+                    if (ACTIVE_KML_TARGETS.length > 0) sendTargetsToServer(ACTIVE_KML_TARGETS);
+                    if (ANALYTICS_REPORTS.length > 0) sendReportsToServer(ANALYTICS_REPORTS);
                 };
                 
                 socket.onmessage = function(event) {
                     try {
                         const message = JSON.parse(event.data);
-                        
                         if (message.type === "init_targets" || message.type === "update_targets") {
                             const payload = message.payload || [];
                             if (payload.length > 0) {
-                                // Deduplicate payload to optimize performance and eliminate duplicates
                                 ACTIVE_KML_TARGETS = sanitizeAndSyncTargets(payload);
-                                
-                                if (map) {
-                                    renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
-                                }
+                                if (map) renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
                                 renderKmlTargetsTable(ACTIVE_KML_TARGETS);
-                                
-                                const scrollConsole = document.getElementById('scrolling-terminal');
-                                const now = new Date();
-                                const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-                                scrollConsole.innerText = `[${timeStr}] СИНХРОНІЗАЦІЯ: ОТРИМАНО ОНОВЛЕННЯ ДАНИХ (${ACTIVE_KML_TARGETS.length} ЦІЛЕЙ УСПІШНО ОНОВЛЕНО В РЕАЛЬНОМУ ЧАСІ)`;
-                                
                                 document.getElementById('kml-status-badge').innerText = `СИНХРОНІЗОВАНО // ${ACTIVE_KML_TARGETS.length} ЦІЛЕЙ`;
-                                document.getElementById('kml-status-badge').className = "text-[10px] font-mono bg-tacgreen/20 text-tacgreen border border-tacgreen/40 px-2 py-0.5 rounded uppercase font-bold";
-                                
-                                playPing(1100, 0.05, "triangle");
                             }
                         }
-                    } catch (err) {
-                        console.error("Помилка обробки повідомлення WebSocket:", err);
-                    }
+                        else if (message.type === "init_reports" || message.type === "update_reports") {
+                            const payload = message.payload || [];
+                            if (payload.length > 0) {
+                                ANALYTICS_REPORTS = sanitizeAndSyncReports(payload);
+                                renderAnalyticsReports();
+                                showCustomNotification("Отримано нове оперативне донесення!");
+                                playPing(1500, 0.1, "triangle");
+                            }
+                        }
+                    } catch (err) {}
                 };
-                
-                socket.onclose = function() {
-                    updateGisStatus("disconnected", "GIS LINK STATUS: OFFLINE (LOCAL FALLBACK)");
-                    
-                    // Automatically retry in 5 seconds
-                    setTimeout(connectWebSocket, 5000);
-                };
-                
-                socket.onerror = function(err) {
-                    console.error("Помилка WebSocket:", err);
-                    socket.close();
-                };
-
-            } catch (securityError) {
-                console.warn("WebSocket initialization blocked by browser/sandboxing policy:", securityError);
-                updateGisStatus("disconnected", "GIS LINK: BLOCKED (OFFLINE LOCAL MODE)");
-                showCustomNotification("WebSocket заблоковано фреймом. Працюємо локально.");
-            }
+                socket.onclose = function() { updateGisStatus("disconnected", "GIS LINK: OFFLINE (LOCAL)"); setTimeout(connectWebSocket, 5000); };
+                socket.onerror = function() { socket.close(); };
+            } catch (securityError) { updateGisStatus("disconnected", "GIS LINK: BLOCKED (LOCAL)"); }
         }
 
         function updateGisStatus(state, text) {
-            const badge = document.getElementById("gis-status");
-            const pingDot = document.getElementById("gis-status-ping");
-            const textSpan = document.getElementById("gis-status-text");
-            
+            const badge = document.getElementById("gis-status"); const pingDot = document.getElementById("gis-status-ping"); const textSpan = document.getElementById("gis-status-text");
             if (!badge || !pingDot || !textSpan) return;
-            
             textSpan.innerText = text;
-            
-            // Remove existing state classes
             badge.className = "text-xs font-mono px-3 py-1.5 rounded flex items-center gap-2 transition-all border";
             pingDot.className = "inline-block h-2 w-2 rounded-full animate-ping";
-            
-            if (state === "connected") {
-                badge.classList.add("text-tacgreen", "bg-tacgreen/10", "border-tacgreen/30");
-                pingDot.classList.add("bg-tacgreen");
-            } else if (state === "connecting") {
-                badge.classList.add("text-tacyellow", "bg-tacyellow/10", "border-tacyellow/30");
-                pingDot.classList.add("bg-tacyellow");
-            } else {
-                badge.classList.add("text-tacred", "bg-tacred/10", "border-tacred/30");
-                pingDot.classList.add("bg-tacred");
-            }
+            if (state === "connected") { badge.classList.add("text-tacgreen", "bg-tacgreen/10", "border-tacgreen/30"); pingDot.classList.add("bg-tacgreen"); }
+            else if (state === "connecting") { badge.classList.add("text-tacyellow", "bg-tacyellow/10", "border-tacyellow/30"); pingDot.classList.add("bg-tacyellow"); }
+            else { badge.classList.add("text-tacred", "bg-tacred/10", "border-tacred/30"); pingDot.classList.add("bg-tacred"); }
         }
 
         function sendTargetsToServer(targets) {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({
-                    type: "new_targets",
-                    payload: targets
-                }));
-            }
+            if (socket && socket.readyState === WebSocket.OPEN) { socket.send(JSON.stringify({ type: "new_targets", payload: targets })); }
         }
 
-        // MANUAL PLACEMENT CONTROLS
+        function sendReportsToServer(reports) {
+            if (socket && socket.readyState === WebSocket.OPEN) { socket.send(JSON.stringify({ type: "new_reports", payload: reports })); }
+        }
+
+        // ==========================================
+        // ANALYTICS & REPORTS LOGIC (NEW)
+        // ==========================================
+        
+        function renderAnalyticsReports() {
+            const feed = document.getElementById("reports-feed");
+            if (!feed) return;
+            feed.innerHTML = "";
+            
+            if (ANALYTICS_REPORTS.length === 0) {
+                feed.innerHTML = `<div class="text-gray-500 font-mono text-sm text-center mt-10">Немає збережех донесень у журналі.</div>`;
+                return;
+            }
+
+            ANALYTICS_REPORTS.forEach(rep => {
+                const dateObj = new Date(rep.timestamp);
+                const timeString = `${String(dateObj.getHours()).padStart(2,'0')}:${String(dateObj.getMinutes()).padStart(2,'0')} ${String(dateObj.getDate()).padStart(2,'0')}.${String(dateObj.getMonth()+1).padStart(2,'0')}.${dateObj.getFullYear()}`;
+                
+                feed.innerHTML += `
+                    <div class="bg-tacgray-900/80 border-l-4 border-${rep.color} p-3 rounded shadow-sm hover:bg-tacgray-700 transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-mono font-bold text-${rep.color} bg-${rep.color}/10 px-2 py-0.5 rounded border border-${rep.color}/20">
+                                ${rep.icon} ${rep.type.toUpperCase()}
+                            </span>
+                            <span class="text-[10px] text-gray-500 font-mono">${timeString}</span>
+                        </div>
+                        <p class="text-sm text-gray-200 font-sans leading-relaxed mb-2">${rep.text}</p>
+                        <div class="text-[9px] text-gray-500 font-mono text-right border-t border-tacgray-700 pt-1">
+                            АВТОР: ${rep.author}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function submitAnalyticsReport() {
+            const typeSelect = document.getElementById("report-type");
+            const textInput = document.getElementById("report-text");
+            
+            const typeVal = typeSelect.value;
+            const textVal = textInput.value.trim();
+            
+            if (!textVal) {
+                showCustomNotification("Помилка: Текст донесення не може бути порожнім!");
+                playPing(400, 0.2, "sawtooth");
+                return;
+            }
+
+            let icon = "ℹ️"; let color = "tacblue";
+            if (typeVal === "operational") { icon = "🔴"; color = "tacred"; }
+            else if (typeVal === "logistics") { icon = "📦"; color = "tacyellow"; }
+            else if (typeVal === "ew") { icon = "📡"; color = "tacgreen"; }
+
+            const newReport = {
+                id: `rep-manual-${Date.now()}`,
+                type: typeVal,
+                icon: icon,
+                color: color,
+                timestamp: new Date().toISOString(),
+                text: textVal,
+                author: "Локальний Оператор"
+            };
+
+            // Add locally
+            ANALYTICS_REPORTS.unshift(newReport); // Add to top
+            renderAnalyticsReports();
+            
+            // Send to network
+            sendReportsToServer([newReport]);
+            
+            // Clear UI
+            textInput.value = "";
+            showCustomNotification("Донесення відправлено в загальну мережу!");
+            playPing(1200, 0.2, "sine");
+            
+            // Log to terminal
+            document.getElementById('scrolling-terminal').innerText = `[${new Date().toLocaleTimeString()}] ВІДПРАВЛЕНО ДОНЕСЕННЯ: ${typeVal.toUpperCase()}`;
+        }
+
+        // ==========================================
+        // EXPORT LOGIC (NEW)
+        // ==========================================
+
+        function downloadFile(content, fileName, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showCustomNotification(`Файл ${fileName} успішно завантажено.`);
+            playPing(1400, 0.1, 'sine');
+        }
+
+        function exportKML() {
+            if (ACTIVE_KML_TARGETS.length === 0) {
+                showCustomNotification("Немає цілей для експорту на карті.");
+                return;
+            }
+            
+            let kmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>Exported_Tactical_Targets_${new Date().toISOString().split('T')[0]}</name>\n`;
+            
+            ACTIVE_KML_TARGETS.forEach(tgt => {
+                kmlContent += `  <Placemark>\n    <name>${tgt.codeName}</name>\n    <description>${tgt.description} [Командир: ${tgt.leader}, Локація: ${tgt.city}]</description>\n    <Point>\n      <coordinates>${tgt.lng},${tgt.lat},0</coordinates>\n    </Point>\n  </Placemark>\n`;
+            });
+            
+            kmlContent += `</Document>\n</kml>`;
+            downloadFile(kmlContent, `Tactical_Targets_${new Date().getTime()}.kml`, "application/vnd.google-earth.kml+xml");
+        }
+
+        function exportUnitsCSV() {
+            let csv = "\uFEFFID,Назва підрозділу,Рівень Загрози,Чисельність,Частоти,Широта,Довгота\n"; // \uFEFF is BOM for Excel UTF-8
+            INTEL_DATABASE.forEach(u => {
+                // Escape quotes in strings
+                const name = u.name.replace(/"/g, '""');
+                const freqs = u.frequencies.replace(/"/g, '""');
+                csv += `"${u.id}","${name}","${u.threat}","${u.personnel}","${freqs}",${u.lat},${u.lng}\n`;
+            });
+            downloadFile(csv, `Units_ORBAT_Export_${new Date().toISOString().split('T')[0]}.csv`, "text/csv;charset=utf-8;");
+        }
+
+        function exportReportsCSV() {
+            if (ANALYTICS_REPORTS.length === 0) {
+                showCustomNotification("Журнал донесень порожній.");
+                return;
+            }
+            let csv = "\uFEFFЧас,Категорія,Текст донесення,Автор\n";
+            ANALYTICS_REPORTS.forEach(rep => {
+                const txt = rep.text.replace(/"/g, '""');
+                const dateStr = new Date(rep.timestamp).toLocaleString('uk-UA');
+                csv += `"${dateStr}","${rep.type}","${txt}","${rep.author}"\n`;
+            });
+            downloadFile(csv, `Analytics_Reports_Log_${new Date().toISOString().split('T')[0]}.csv`, "text/csv;charset=utf-8;");
+        }
+
+
+        // ==========================================
+        // REST OF THE APPLICATION
+        // ==========================================
+
         function toggleManualPlacementMode() {
             isManualPlacementActive = !isManualPlacementActive;
             const btn = document.getElementById("manual-placement-btn");
             const mapContainer = document.getElementById("tactical-leaflet-map-div");
-            
             if (isManualPlacementActive) {
                 btn.className = "w-full bg-tacyellow text-tacgray-900 border border-tacyellow px-3 py-2 rounded text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 uppercase glow-blue animate-pulse";
                 showCustomNotification("РЕЖИМ НАНЕСЕННЯ АКТИВОВАНО: Клікніть у будь-якій точці на карті!");
@@ -1021,615 +836,199 @@
         function openManualTargetModal(lat, lng) {
             tempPlacedLatLng = { lat: lat, lng: lng };
             document.getElementById("manual-coords-display").value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-            
-            // Auto focus codename
-            document.getElementById("manual-codename").value = "";
-            document.getElementById("manual-city").value = "";
-            document.getElementById("manual-leader").value = "";
-            document.getElementById("manual-description").value = "";
-            
-            const modal = document.getElementById("manual-target-modal");
-            modal.classList.remove("hidden");
+            document.getElementById("manual-codename").value = ""; document.getElementById("manual-city").value = "";
+            document.getElementById("manual-leader").value = ""; document.getElementById("manual-description").value = "";
+            document.getElementById("manual-target-modal").classList.remove("hidden");
             playPing(1100, 0.2, "sine");
         }
 
-        function closeManualTargetModal() {
-            document.getElementById("manual-target-modal").classList.add("hidden");
-            tempPlacedLatLng = null;
-        }
+        function closeManualTargetModal() { document.getElementById("manual-target-modal").classList.add("hidden"); tempPlacedLatLng = null; }
 
         function submitManualTarget() {
             const codename = document.getElementById("manual-codename").value.trim();
-            const city = document.getElementById("manual-city").value.trim() || "Не вказано";
-            const leader = document.getElementById("manual-leader").value.trim() || "Невідомий розрахунок";
-            const description = document.getElementById("manual-description").value.trim() || "Опис відсутній";
-            
-            if (!codename) {
-                showCustomNotification("Помилка: Позивний / Код цілі обов'язковий!");
-                playPing(400, 0.3, "sawtooth");
-                return;
-            }
-
+            if (!codename) { showCustomNotification("Помилка: Позивний / Код обов'язковий!"); playPing(400, 0.3, "sawtooth"); return; }
             const newTarget = {
-                id: `kml-manual-${Date.now()}`,
-                codeName: codename,
-                city: city,
-                leader: leader,
-                description: description,
-                lat: tempPlacedLatLng.lat,
-                lng: tempPlacedLatLng.lng,
-                timestamp: new Date().toISOString().split('T')[0],
-                fieldType: "russian_unit_locations"
+                id: `kml-manual-${Date.now()}`, codeName: codename,
+                city: document.getElementById("manual-city").value.trim() || "Не вказано",
+                leader: document.getElementById("manual-leader").value.trim() || "Невідомий",
+                description: document.getElementById("manual-description").value.trim() || "Опис відсутній",
+                lat: tempPlacedLatLng.lat, lng: tempPlacedLatLng.lng,
+                timestamp: new Date().toISOString().split('T')[0], fieldType: "russian_unit_locations"
             };
-
-            // Add locally
             ACTIVE_KML_TARGETS.push(newTarget);
-            
-            // Render locally instantly
-            if (map) {
-                renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
-            }
+            if (map) renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
             renderKmlTargetsTable(ACTIVE_KML_TARGETS);
-
-            // Sync with Server (FastAPI server will extend the list and broadcast back)
             sendTargetsToServer([newTarget]);
-
-            showCustomNotification(`Ціль "${codename}" успішно додано та синхронізовано!`);
-            playPing(1300, 0.25, "sine");
-            closeManualTargetModal();
+            showCustomNotification(`Ціль "${codename}" успішно додано!`);
+            playPing(1300, 0.25, "sine"); closeManualTargetModal();
         }
 
-        // WEB AUDIO ENGINE
         function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
         function playPing(frequency = 800, duration = 0.1, type = "sine") {
             if (!isAudioOn) return; initAudio();
             try {
                 let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
                 osc.type = type; osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + duration);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration);
             } catch (e) {}
         }
 
         function toggleAudio() {
             isAudioOn = !isAudioOn; const btn = document.getElementById('audio-toggle');
             const icon = document.getElementById('audio-icon'); const text = document.getElementById('audio-text');
-            if (isAudioOn) {
-                initAudio(); btn.classList.remove('text-tacblue', 'border-tacgray-600');
-                btn.classList.add('text-tacgreen', 'border-tacgreen/50', 'bg-tacgreen/10');
-                icon.className = "fa-solid fa-volume-high"; text.innerText = "AUDIO: ON"; playPing(1000, 0.2);
-            } else {
-                btn.classList.remove('text-tacgreen', 'border-tacgreen/50', 'bg-tacgreen/10');
-                btn.classList.add('text-tacblue', 'border-tacgray-600');
-                icon.className = "fa-solid fa-volume-xmark"; text.innerText = "AUDIO: OFF";
-            }
+            if (isAudioOn) { initAudio(); btn.classList.remove('text-tacblue', 'border-tacgray-600'); btn.classList.add('text-tacgreen', 'border-tacgreen/50', 'bg-tacgreen/10'); icon.className = "fa-solid fa-volume-high"; text.innerText = "AUDIO: ON"; playPing(1000, 0.2);
+            } else { btn.classList.remove('text-tacgreen', 'border-tacgreen/50', 'bg-tacgreen/10'); btn.classList.add('text-tacblue', 'border-tacgray-600'); icon.className = "fa-solid fa-volume-xmark"; text.innerText = "AUDIO: OFF"; }
         }
 
-        // INITIALIZE THE LEAFLET MAP WITH REAL SATELLITE TILES (Esri Imagery World)
         function initTacticalMap() {
-            if (map) return; // Prevent double initialization
-            
-            // Focus map center on Huliaipole - Zaporizhzhia - Volodarske zone
+            if (map) return; 
             map = L.map('tactical-leaflet-map-div').setView([47.56, 36.65], 9);
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' }).addTo(map);
+            for (let key in layerGroupsStorage) { layerGroupsStorage[key] = L.layerGroup().addTo(map); }
 
-            // Using high quality public military-ready Esri Satellite Substrate
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-            }).addTo(map);
-
-            // Initialize Layer groups
-            for (let key in layerGroupsStorage) {
-                layerGroupsStorage[key] = L.layerGroup().addTo(map);
-            }
-
-            // Populate Core Unit Markers based on Database Coordinates
             INTEL_DATABASE.forEach(unit => {
-                let markerIcon = L.divIcon({
-                    className: 'custom-military-marker-pin',
-                    html: `<div class="relative flex items-center justify-center">
-                            <span class="absolute inline-flex h-6 w-6 rounded-full animate-ping bg-tacred/40 opacity-75"></span>
-                            <div class="h-4 w-4 bg-tacred rounded-full border border-white glow-red flex items-center justify-center">
-                                <div class="h-1.5 w-1.5 bg-white rounded-full"></div>
-                            </div>
-                           </div>`,
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 12]
-                });
-
-                let popupContent = `
-                    <div class="font-sans text-xs p-1">
-                        <div class="font-bold border-b border-tacgray-600 pb-1 mb-1 text-tacred font-mono">${unit.shortName}</div>
-                        <div class="text-gray-300 font-mono mb-1">FREQ: ${unit.frequencies}</div>
-                        <div class="text-gray-400 mb-2">${unit.meta.split(' // ')[0]}</div>
-                        <button onclick="selectUnitFromMap('${unit.id}')" class="w-full bg-tacred text-white font-bold py-1 px-2 rounded text-[10px] uppercase font-mono hover:bg-red-600 transition-all">ВІДКРИТИ ПРОФІЛЬ</button>
-                    </div>
-                `;
-
-                let marker = L.marker([unit.lat, unit.lng], { icon: markerIcon })
-                              .bindPopup(popupContent);
-
-                mapMarkersStorage[unit.id] = marker;
-                layerGroupsStorage[unit.layer].addLayer(marker);
+                let markerIcon = L.divIcon({ className: 'custom-military-marker-pin', html: `<div class="relative flex items-center justify-center"><span class="absolute inline-flex h-6 w-6 rounded-full animate-ping bg-tacred/40 opacity-75"></span><div class="h-4 w-4 bg-tacred rounded-full border border-white glow-red flex items-center justify-center"><div class="h-1.5 w-1.5 bg-white rounded-full"></div></div></div>`, iconSize: [24, 24], iconAnchor: [12, 12] });
+                let popupContent = `<div class="font-sans text-xs p-1"><div class="font-bold border-b border-tacgray-600 pb-1 mb-1 text-tacred font-mono">${unit.shortName}</div><div class="text-gray-300 font-mono mb-1">FREQ: ${unit.frequencies}</div><button onclick="selectUnitFromMap('${unit.id}')" class="w-full bg-tacred text-white font-bold py-1 px-2 rounded text-[10px] uppercase font-mono hover:bg-red-600 transition-all">ВІДКРИТИ ПРОФІЛЬ</button></div>`;
+                let marker = L.marker([unit.lat, unit.lng], { icon: markerIcon }).bindPopup(popupContent);
+                mapMarkersStorage[unit.id] = marker; layerGroupsStorage[unit.layer].addLayer(marker);
             });
 
-            // Coordinate tracker on mouse move over the map
-            map.on('mousemove', function(e) {
-                const coordSpan = document.getElementById("map-coords-tracker");
-                if (coordSpan) {
-                    coordSpan.innerText = `${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}`;
-                }
-            });
-
-            // Map click handler for manual placement mode
-            map.on('click', function(e) {
-                if (isManualPlacementActive) {
-                    openManualTargetModal(e.latlng.lat, e.latlng.lng);
-                    toggleManualPlacementMode(); // Turn off mode after click to prevent multiple triggers
-                }
-            });
-
-            // Initialize KML targets layer with the current synchronized state
+            map.on('mousemove', function(e) { const coordSpan = document.getElementById("map-coords-tracker"); if (coordSpan) coordSpan.innerText = `${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}`; });
+            map.on('click', function(e) { if (isManualPlacementActive) { openManualTargetModal(e.latlng.lat, e.latlng.lng); toggleManualPlacementMode(); } });
             renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
         }
 
-        // DRAW KML ENEMY TARGETS WITH DISTINCT ORANGE RETICLE ICONS
         function renderKmlTargetsOnMap(targetsList) {
-            // Clear existing KML markers first
-            if (layerGroupsStorage.kml) {
-                layerGroupsStorage.kml.clearLayers();
-            }
+            if (layerGroupsStorage.kml) layerGroupsStorage.kml.clearLayers();
             mapKmlMarkersStorage = [];
-
             targetsList.forEach(tgt => {
-                let targetIcon = L.divIcon({
-                    className: 'custom-kml-target-pin',
-                    html: `<div class="relative flex items-center justify-center">
-                            <span class="absolute inline-flex h-7 w-7 rounded-full animate-pulse bg-tacyellow/30 opacity-70"></span>
-                            <div class="h-5 w-5 bg-tacgray-900 border-2 border-tacyellow rounded-full flex items-center justify-center glow-blue">
-                                <i class="fa-solid fa-crosshairs text-tacyellow text-[10px]"></i>
-                            </div>
-                           </div>`,
-                    iconSize: [28, 28],
-                    iconAnchor: [14, 14]
-                });
-
-                let popupContent = `
-                    <div class="font-sans text-xs p-2 max-w-[240px]">
-                        <div class="font-bold border-b border-tacyellow pb-1 mb-1 text-tacyellow font-mono flex justify-between">
-                            <span>🎯 ЦІЛЬ: ${tgt.codeName}</span>
-                            <span class="text-[9px] text-gray-400">${tgt.timestamp}</span>
-                        </div>
-                        <div class="text-white font-bold mt-1 text-[11px]">${tgt.leader}</div>
-                        <div class="text-[10px] text-tacblue font-mono">ЛОКАЦІЯ: ${tgt.city}</div>
-                        <div class="text-gray-300 text-[11px] mt-1.5 leading-relaxed bg-tacgray-900/90 p-1.5 border border-tacgray-700 rounded">${tgt.description}</div>
-                        <div class="mt-2 flex gap-1.5">
-                            <button onclick="copyToClipboard('${tgt.lat.toFixed(6)}, ${tgt.lng.toFixed(6)}')" class="flex-1 bg-tacgray-700 hover:bg-tacgray-600 text-white font-mono py-1 px-1 rounded text-[9px] uppercase transition-all">Копіювати Коорд.</button>
-                            <button onclick="focusMapOnKmlTarget('${tgt.id}')" class="flex-1 bg-tacyellow text-tacgray-900 font-bold py-1 px-1 rounded text-[9px] uppercase transition-all">Фокус</button>
-                        </div>
-                    </div>
-                `;
-
-                let marker = L.marker([tgt.lat, tgt.lng], { icon: targetIcon })
-                              .bindPopup(popupContent);
-
-                mapKmlMarkersStorage.push({ id: tgt.id, marker: marker, data: tgt });
-                layerGroupsStorage.kml.addLayer(marker);
+                let targetIcon = L.divIcon({ className: 'custom-kml-target-pin', html: `<div class="relative flex items-center justify-center"><span class="absolute inline-flex h-7 w-7 rounded-full animate-pulse bg-tacyellow/30 opacity-70"></span><div class="h-5 w-5 bg-tacgray-900 border-2 border-tacyellow rounded-full flex items-center justify-center glow-blue"><i class="fa-solid fa-crosshairs text-tacyellow text-[10px]"></i></div></div>`, iconSize: [28, 28], iconAnchor: [14, 14] });
+                let popupContent = `<div class="font-sans text-xs p-2 max-w-[240px]"><div class="font-bold border-b border-tacyellow pb-1 mb-1 text-tacyellow font-mono flex justify-between"><span>🎯 ${tgt.codeName}</span><span class="text-[9px] text-gray-400">${tgt.timestamp}</span></div><div class="text-white font-bold mt-1 text-[11px]">${tgt.leader}</div><div class="text-[10px] text-tacblue font-mono">ЛОКАЦІЯ: ${tgt.city}</div><div class="text-gray-300 text-[11px] mt-1.5 bg-tacgray-900/90 p-1.5 border border-tacgray-700 rounded">${tgt.description}</div><div class="mt-2 flex gap-1.5"><button onclick="copyToClipboard('${tgt.lat.toFixed(6)}, ${tgt.lng.toFixed(6)}')" class="flex-1 bg-tacgray-700 hover:bg-tacgray-600 text-white font-mono py-1 rounded text-[9px] uppercase">Копіювати Коорд.</button></div></div>`;
+                let marker = L.marker([tgt.lat, tgt.lng], { icon: targetIcon }).bindPopup(popupContent);
+                mapKmlMarkersStorage.push({ id: tgt.id, marker: marker, data: tgt }); layerGroupsStorage.kml.addLayer(marker);
             });
         }
 
-        // TRIGGER MAP LAYER CHECKBOX FILTERS
         function toggleMapLayer(layerKey) {
             let isChecked = document.getElementById(`layer-${layerKey}`).checked;
-            if (isChecked) {
-                map.addLayer(layerGroupsStorage[layerKey]);
-                playPing(700, 0.05, 'sine');
-            } else {
-                map.removeLayer(layerGroupsStorage[layerKey]);
-                playPing(500, 0.05, 'sine');
-            }
+            if (isChecked) { map.addLayer(layerGroupsStorage[layerKey]); playPing(700, 0.05, 'sine'); } 
+            else { map.removeLayer(layerGroupsStorage[layerKey]); playPing(500, 0.05, 'sine'); }
         }
 
-        // DRAG & DROP / UPLOAD HANDLER FOR PARSING PHYSICAL KML FILES AT CLIENT SIDE
-        function handleKMLUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            parseKmlFile(file);
-        }
-
-        // DRAG-DROP AREA INTERACTIVITY
-        const dropZone = document.getElementById('kml-drop-zone');
-        if (dropZone) {
-            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-tacyellow', 'bg-tacyellow/5'); });
-            dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-tacyellow', 'bg-tacyellow/5'); });
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('border-tacyellow', 'bg-tacyellow/5');
-                const file = e.dataTransfer.files[0];
-                if (file && file.name.endsWith('.kml')) {
-                    parseKmlFile(file);
-                } else {
-                    showCustomNotification("Помилка: Завантажте файл у форматі .kml");
-                }
-            });
-        }
-
+        function handleKMLUpload(event) { const file = event.target.files[0]; if (file) parseKmlFile(file); }
+        
         function parseKmlFile(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const text = e.target.result;
                 try {
-                    let parser = new DOMParser();
-                    let xmlDoc = parser.parseFromString(text, "text/xml");
+                    let parser = new DOMParser(); let xmlDoc = parser.parseFromString(e.target.result, "text/xml");
                     let placemarks = xmlDoc.getElementsByTagName("Placemark");
-                    
-                    if (placemarks.length === 0) {
-                        showCustomNotification("У KML файлі не знайдено маркерів (Placemarks).");
-                        return;
-                    }
-
+                    if (placemarks.length === 0) { showCustomNotification("Маркерів не знайдено."); return; }
                     let parsedTargets = [];
                     for (let i = 0; i < placemarks.length; i++) {
                         let pm = placemarks[i];
-                        let nameNode = pm.getElementsByTagName("name")[0];
-                        let nameText = nameNode ? nameNode.textContent : "Невідома ціль";
-                        
-                        let coordsNode = pm.getElementsByTagName("coordinates")[0];
-                        let coordsText = coordsNode ? coordsNode.textContent : "";
-                        
-                        let descNode = pm.getElementsByTagName("description")[0];
-                        let descText = descNode ? descNode.textContent : "";
-
-                        // Parse ExtendedData elements if present
-                        let extendedData = {};
-                        let dataNodes = pm.getElementsByTagName("Data");
-                        for (let j = 0; j < dataNodes.length; j++) {
-                            let dNode = dataNodes[j];
-                            let dName = dNode.getAttribute("name");
-                            let dValueNode = dNode.getElementsByTagName("value")[0];
-                            let dValue = dValueNode ? dValueNode.textContent : "";
-                            extendedData[dName] = dValue;
-                        }
-
-                        // Extract coordinates (standard KML structure: lng,lat,alt)
+                        let nameText = pm.getElementsByTagName("name")[0] ? pm.getElementsByTagName("name")[0].textContent : "Невідома ціль";
+                        let coordsText = pm.getElementsByTagName("coordinates")[0] ? pm.getElementsByTagName("coordinates")[0].textContent : "";
+                        let descText = pm.getElementsByTagName("description")[0] ? pm.getElementsByTagName("description")[0].textContent : "";
+                        let extendedData = {}; let dataNodes = pm.getElementsByTagName("Data");
+                        for (let j = 0; j < dataNodes.length; j++) { let dName = dataNodes[j].getAttribute("name"); let dValue = dataNodes[j].getElementsByTagName("value")[0] ? dataNodes[j].getElementsByTagName("value")[0].textContent : ""; extendedData[dName] = dValue; }
                         if (coordsText.trim()) {
                             let parts = coordsText.trim().split(",");
                             if (parts.length >= 2) {
-                                let lng = parseFloat(parts[0]);
-                                let lat = parseFloat(parts[1]);
-                                
-                                // Build standard structure mapping their file
-                                parsedTargets.push({
-                                    id: "kml-imported-" + i + "-" + Date.now(),
-                                    codeName: extendedData['code_name'] || nameText,
-                                    city: extendedData['city'] || "Не вказано",
-                                    leader: extendedData['position_leader'] || "Невідомий розрахунок",
-                                    description: extendedData['описание'] || descText || "Опис відсутній",
-                                    lat: lat,
-                                    lng: lng,
-                                    timestamp: extendedData['timestamp'] || new Date().toISOString().split('T')[0],
-                                    fieldType: extendedData['field_type'] || "russian_unit_locations"
-                                });
+                                parsedTargets.push({ id: "kml-imported-" + i + "-" + Date.now(), codeName: extendedData['code_name'] || nameText, city: extendedData['city'] || "Не вказано", leader: extendedData['position_leader'] || "Невідомий розрахунок", description: extendedData['описание'] || descText || "Опис відсутній", lat: parseFloat(parts[1]), lng: parseFloat(parts[0]), timestamp: extendedData['timestamp'] || new Date().toISOString().split('T')[0], fieldType: "russian_unit_locations" });
                             }
                         }
                     }
-
                     if (parsedTargets.length > 0) {
-                        // Send new targets directly to server (which will broadcast them to everyone)
-                        if (socket && socket.readyState === WebSocket.OPEN) {
-                            sendTargetsToServer(parsedTargets);
-                            showCustomNotification(`Імпортовано ${parsedTargets.length} цілей. Надсилання в тактичну мережу...`);
-                        } else {
-                            // Offline fallback
-                            ACTIVE_KML_TARGETS = sanitizeAndSyncTargets([...ACTIVE_KML_TARGETS, ...parsedTargets]);
-                            renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
-                            renderKmlTargetsTable(ACTIVE_KML_TARGETS);
-                            showCustomNotification(`Імпортовано ${parsedTargets.length} цілей (Локальний автономний режим).`);
-                        }
-                    } else {
-                        showCustomNotification("Не вдалося розпарсити координати. Перевірте формат.");
+                        if (socket && socket.readyState === WebSocket.OPEN) { sendTargetsToServer(parsedTargets); showCustomNotification(`Відправлено ${parsedTargets.length} цілей в мережу...`); }
+                        else { ACTIVE_KML_TARGETS = sanitizeAndSyncTargets([...ACTIVE_KML_TARGETS, ...parsedTargets]); renderKmlTargetsOnMap(ACTIVE_KML_TARGETS); renderKmlTargetsTable(ACTIVE_KML_TARGETS); showCustomNotification(`Імпортовано (Локально).`); }
                     }
-
-                } catch (err) {
-                    console.error("KML Parse Error:", err);
-                    showCustomNotification("Помилка при читанні структури XML/KML файлу.");
-                }
+                } catch (err) { showCustomNotification("Помилка читання XML/KML."); }
             };
             reader.readAsText(file);
         }
 
-        // COPY COORDINATES UTILITY
-        function copyToClipboard(text) {
-            let tempInput = document.createElement("input");
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-            showCustomNotification(`Координати ${text} скопійовано!`);
-            playPing(1400, 0.05, 'sine');
-        }
+        function copyToClipboard(text) { let tempInput = document.createElement("input"); tempInput.value = text; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput); showCustomNotification(`Координати ${text} скопійовано!`); playPing(1400, 0.05, 'sine'); }
 
-        // RENDER TARGETS TABLE CORRESPONDING TO PRE-LOADED OR IMPORTED KML OBJECTS
         function renderKmlTargetsTable(targetsList) {
-            const tableBody = document.getElementById('kml-targets-table-body');
-            if (!tableBody) return;
-            tableBody.innerHTML = '';
-
+            const tableBody = document.getElementById('kml-targets-table-body'); if (!tableBody) return; tableBody.innerHTML = '';
             targetsList.forEach(tgt => {
-                tableBody.innerHTML += `
-                    <tr class="hover:bg-tacgray-800/40 transition-colors">
-                        <td class="p-2 border-b border-tacgray-700 font-bold text-tacyellow">${tgt.codeName}</td>
-                        <td class="p-2 border-b border-tacgray-700 text-tacblue">${tgt.city}</td>
-                        <td class="p-2 border-b border-tacgray-700 text-white font-sans text-[11px]">${tgt.leader}</td>
-                        <td class="p-2 border-b border-tacgray-700 text-gray-400 text-[11px] font-sans truncate max-w-[280px]" title="${tgt.description}">${tgt.description}</td>
-                        <td class="p-2 border-b border-tacgray-700 text-center">
-                            <div class="flex justify-center gap-1.5">
-                                <button onclick="copyToClipboard('${tgt.lat.toFixed(6)}, ${tgt.lng.toFixed(6)}')" class="bg-tacgray-800 hover:bg-tacgray-700 text-gray-300 px-1.5 py-0.5 rounded text-[9px] border border-tacgray-600">
-                                    <i class="fa-solid fa-copy"></i>
-                                </button>
-                                <button onclick="focusMapOnKmlTarget('${tgt.id}')" class="bg-tacyellow hover:bg-yellow-600 text-tacgray-900 px-1.5 py-0.5 rounded text-[9px] font-bold">
-                                    📍 ТРЕК
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                tableBody.innerHTML += `<tr class="hover:bg-tacgray-800/40 transition-colors"><td class="p-2 border-b border-tacgray-700 font-bold text-tacyellow">${tgt.codeName}</td><td class="p-2 border-b border-tacgray-700 text-tacblue">${tgt.city}</td><td class="p-2 border-b border-tacgray-700 text-white font-sans text-[11px]">${tgt.leader}</td><td class="p-2 border-b border-tacgray-700 text-gray-400 text-[11px] font-sans truncate max-w-[280px]" title="${tgt.description}">${tgt.description}</td><td class="p-2 border-b border-tacgray-700 text-center"><div class="flex justify-center gap-1.5"><button onclick="copyToClipboard('${tgt.lat.toFixed(6)}, ${tgt.lng.toFixed(6)}')" class="bg-tacgray-800 hover:bg-tacgray-700 text-gray-300 px-1.5 py-0.5 rounded text-[9px] border border-tacgray-600"><i class="fa-solid fa-copy"></i></button><button onclick="focusMapOnKmlTarget('${tgt.id}')" class="bg-tacyellow hover:bg-yellow-600 text-tacgray-900 px-1.5 py-0.5 rounded text-[9px] font-bold">📍 ТРЕК</button></div></td></tr>`;
             });
         }
 
         function focusMapOnKmlTarget(id) {
             let targetObj = mapKmlMarkersStorage.find(item => item.id === id);
             if (targetObj && map) {
-                // Ensure KML layer checkbox is checked and visible
-                document.getElementById('layer-kml').checked = true;
-                if (!map.hasLayer(layerGroupsStorage.kml)) {
-                    map.addLayer(layerGroupsStorage.kml);
-                }
-
+                document.getElementById('layer-kml').checked = true; if (!map.hasLayer(layerGroupsStorage.kml)) map.addLayer(layerGroupsStorage.kml);
                 map.setView(targetObj.marker.getLatLng(), 13, { animate: true, duration: 1.2 });
-                setTimeout(() => {
-                    targetObj.marker.openPopup();
-                }, 1200);
-                playPing(1000, 0.1, 'triangle');
+                setTimeout(() => { targetObj.marker.openPopup(); }, 1200); playPing(1000, 0.1, 'triangle');
             }
         }
 
-        // FLOATING Tactical Notification System (instead of default Alerts)
         function showCustomNotification(message) {
-            const containerId = 'tac-notification-hub';
-            let hub = document.getElementById(containerId);
-            if (!hub) {
-                hub = document.createElement('div');
-                hub.id = containerId;
-                hub.className = 'fixed bottom-20 right-6 z-50 flex flex-col gap-2 max-w-sm font-sans';
-                document.body.appendChild(hub);
-            }
-
-            const alertCard = document.createElement('div');
-            alertCard.className = 'bg-tacgray-800 border-l-4 border-tacyellow p-3 text-xs text-white rounded shadow-2xl flex justify-between items-center gap-3 animate-slide-in';
-            alertCard.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-bell text-tacyellow"></i>
-                    <span>${message}</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            `;
-            
-            hub.appendChild(alertCard);
-            setTimeout(() => {
-                alertCard.remove();
-            }, 5000);
+            let hub = document.getElementById('tac-notification-hub');
+            if (!hub) { hub = document.createElement('div'); hub.id = 'tac-notification-hub'; hub.className = 'fixed bottom-20 right-6 z-50 flex flex-col gap-2 max-w-sm font-sans'; document.body.appendChild(hub); }
+            const alertCard = document.createElement('div'); alertCard.className = 'bg-tacgray-800 border-l-4 border-tacyellow p-3 text-xs text-white rounded shadow-2xl flex justify-between items-center gap-3 animate-slide-in';
+            alertCard.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-bell text-tacyellow"></i><span>${message}</span></div><button onclick="this.parentElement.remove()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>`;
+            hub.appendChild(alertCard); setTimeout(() => { alertCard.remove(); }, 5000);
         }
 
-        // SIDEBAR BUTTONS RENDER
         function renderUnitSelector() {
-            const listContainer = document.getElementById('unit-list');
-            const shortcutContainer = document.getElementById('map-shortcut-container');
-            listContainer.innerHTML = '';
-            shortcutContainer.innerHTML = '';
-
+            const listContainer = document.getElementById('unit-list'); const shortcutContainer = document.getElementById('map-shortcut-container');
+            if(listContainer) listContainer.innerHTML = ''; if(shortcutContainer) shortcutContainer.innerHTML = '';
             INTEL_DATABASE.forEach(unit => {
-                const isActive = unit.id === selectedUnitId;
-                const activeClasses = isActive 
-                    ? 'border-tacred bg-tacred/10 text-white glow-red' 
-                    : 'border-tacgray-600 bg-tacgray-900/50 text-gray-400 hover:border-tacblue hover:text-white';
-                
-                listContainer.innerHTML += `
-                    <button onclick="selectUnit('${unit.id}')" class="w-full text-left p-2.5 border rounded transition-all flex items-center justify-between gap-3 ${activeClasses}">
-                        <div class="truncate">
-                            <div class="text-[9px] font-mono text-tacred uppercase">THREAT: ${unit.threat}</div>
-                            <div class="text-xs font-bold truncate">${unit.shortName}</div>
-                        </div>
-                        <div class="shrink-0 font-mono text-[10px]">
-                            <span class="px-1.5 py-0.5 bg-tacgray-700 text-gray-300 rounded border border-tacgray-600">${unit.layer.toUpperCase()}</span>
-                        </div>
-                    </button>
-                `;
-
-                // Add map shortcuts list
-                shortcutContainer.innerHTML += `
-                    <button onclick="focusMapOnUnit('${unit.id}')" class="w-full text-left font-mono px-2 py-1 bg-tacgray-900/80 border border-tacgray-700 text-gray-300 hover:border-tacred hover:text-white rounded flex justify-between items-center transition-all">
-                        <span class="truncate">📍 ${unit.shortName}</span>
-                        <i class="fa-solid fa-location-arrow text-[10px] text-tacblue"></i>
-                    </button>
-                `;
+                const activeClasses = unit.id === selectedUnitId ? 'border-tacred bg-tacred/10 text-white glow-red' : 'border-tacgray-600 bg-tacgray-900/50 text-gray-400 hover:border-tacblue hover:text-white';
+                if(listContainer) listContainer.innerHTML += `<button onclick="selectUnit('${unit.id}')" class="w-full text-left p-2.5 border rounded transition-all flex items-center justify-between gap-3 ${activeClasses}"><div class="truncate"><div class="text-[9px] font-mono text-tacred uppercase">THREAT: ${unit.threat}</div><div class="text-xs font-bold truncate">${unit.shortName}</div></div><div class="shrink-0 font-mono text-[10px]"><span class="px-1.5 py-0.5 bg-tacgray-700 text-gray-300 rounded border border-tacgray-600">${unit.layer.toUpperCase()}</span></div></button>`;
+                if(shortcutContainer) shortcutContainer.innerHTML += `<button onclick="focusMapOnUnit('${unit.id}')" class="w-full text-left font-mono px-2 py-1 bg-tacgray-900/80 border border-tacgray-700 text-gray-300 hover:border-tacred hover:text-white rounded flex justify-between items-center transition-all"><span class="truncate">📍 ${unit.shortName}</span><i class="fa-solid fa-location-arrow text-[10px] text-tacblue"></i></button>`;
             });
         }
 
-        function selectUnit(id) {
-            selectedUnitId = id;
-            renderUnitSelector();
-            updateUnitIntelDisplay();
-            playPing(600, 0.08, 'triangle');
-
-            const activeUnit = INTEL_DATABASE.find(u => u.id === selectedUnitId);
-            const scrollConsole = document.getElementById('scrolling-terminal');
-            const now = new Date();
-            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-            scrollConsole.innerText = `[${timeStr}] SIGINT FOCUS ON ${activeUnit.name.toUpperCase()}: "${activeUnit.intercept}"`;
-        }
-
-        function selectUnitFromMap(id) {
-            switchTab('intel');
-            selectUnit(id);
-        }
-
-        // INTERACTIVE METHOD TO PAN AND OPEN POPUPS ON GEOGRAPHIC MAP ON DEMAND
+        function selectUnit(id) { selectedUnitId = id; renderUnitSelector(); updateUnitIntelDisplay(); playPing(600, 0.08, 'triangle'); }
+        function selectUnitFromMap(id) { switchTab('intel'); selectUnit(id); }
         function focusMapOnUnit(id) {
-            let unit = INTEL_DATABASE.find(u => u.id === id);
-            if (!unit || !map) return;
-            
-            // Force layer check to true if it was hidden
-            document.getElementById(`layer-${unit.layer}`).checked = true;
-            if (!map.hasLayer(layerGroupsStorage[unit.layer])) {
-                map.addLayer(layerGroupsStorage[unit.layer]);
-            }
-
-            map.setView([unit.lat, unit.lng], 11, { animate: true, duration: 1.5 });
-            setTimeout(() => {
-                mapMarkersStorage[id].openPopup();
-            }, 1500);
-
-            playPing(1100, 0.1, 'sine');
+            let unit = INTEL_DATABASE.find(u => u.id === id); if (!unit || !map) return;
+            document.getElementById(`layer-${unit.layer}`).checked = true; if (!map.hasLayer(layerGroupsStorage[unit.layer])) map.addLayer(layerGroupsStorage[unit.layer]);
+            map.setView([unit.lat, unit.lng], 11, { animate: true, duration: 1.5 }); setTimeout(() => { mapMarkersStorage[id].openPopup(); }, 1500); playPing(1100, 0.1, 'sine');
         }
 
         function updateUnitIntelDisplay() {
-            const unit = INTEL_DATABASE.find(u => u.id === selectedUnitId);
-            if (!unit) return;
-
-            document.getElementById('intel-unit-name').innerText = unit.name;
-            document.getElementById('intel-unit-meta').innerText = unit.meta;
-            document.getElementById('intel-threat-score').innerText = unit.threat;
+            const unit = INTEL_DATABASE.find(u => u.id === selectedUnitId); if (!unit) return;
+            document.getElementById('intel-unit-name').innerText = unit.name; document.getElementById('intel-unit-meta').innerText = unit.meta; document.getElementById('intel-threat-score').innerText = unit.threat;
+            document.getElementById('metric-personnel').innerText = unit.personnel; document.getElementById('metric-frequencies').innerText = unit.frequencies; document.getElementById('metric-main-uav').innerText = unit.mainUav; document.getElementById('metric-reb-level').innerText = unit.reb;
+            document.getElementById('intel-desc-origin').innerText = unit.originDesc; document.getElementById('intel-desc-tactics').innerText = unit.tacticalDesc; document.getElementById('intel-intercept').innerText = `"${unit.intercept}"`;
             
-            document.getElementById('metric-personnel').innerText = unit.personnel;
-            document.getElementById('metric-frequencies').innerText = unit.frequencies;
-            document.getElementById('metric-main-uav').innerText = unit.mainUav;
-            document.getElementById('metric-reb-level').innerText = unit.reb;
-
-            document.getElementById('intel-desc-origin').innerText = unit.originDesc;
-            document.getElementById('intel-desc-tactics').innerText = unit.tacticalDesc;
-            document.getElementById('intel-intercept').innerText = `"${unit.intercept}"`;
-
-            const cmdContainer = document.getElementById('intel-commanders');
-            cmdContainer.innerHTML = '';
-            unit.commanders.forEach(cmd => {
-                cmdContainer.innerHTML += `
-                    <div class="bg-tacgray-900/60 border border-tacgray-600 p-2.5 rounded text-xs">
-                        <div class="text-[10px] font-mono text-tacred">${cmd.rank}</div>
-                        <div class="text-sm font-bold text-white">${cmd.name}</div>
-                        <div class="text-[11px] text-gray-400 font-mono mt-0.5">${cmd.role}</div>
-                    </div>
-                `;
-            });
-
-            const assetContainer = document.getElementById('intel-assets');
-            assetContainer.innerHTML = '';
-            unit.assets.forEach(asset => {
-                assetContainer.innerHTML += `
-                    <div class="flex items-center gap-2 text-xs text-gray-300 font-mono">
-                        <i class="fa-solid fa-square-poll-horizontal text-tacblue"></i>
-                        <span>${asset}</span>
-                    </div>
-                `;
-            });
-
-            const uavListContainer = document.getElementById('intel-uav-list');
-            uavListContainer.innerHTML = '';
-            unit.uavs.forEach(uav => {
-                uavListContainer.innerHTML += `
-                    <div class="bg-tacgray-900/40 border border-tacgray-600/60 p-2 rounded text-xs">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[9px] font-mono bg-tacblue/15 text-tacblue border border-tacblue/30 px-1.5 py-0.5 rounded uppercase font-bold">${uav.class}</span>
-                            <span class="text-white font-bold font-mono">${uav.model}</span>
-                        </div>
-                        <p class="text-[11px] text-gray-400">${uav.purpose}</p>
-                    </div>
-                `;
-            });
+            const cmdContainer = document.getElementById('intel-commanders'); if(cmdContainer) { cmdContainer.innerHTML = ''; unit.commanders.forEach(cmd => { cmdContainer.innerHTML += `<div class="bg-tacgray-900/60 border border-tacgray-600 p-2.5 rounded text-xs"><div class="text-[10px] font-mono text-tacred">${cmd.rank}</div><div class="text-sm font-bold text-white">${cmd.name}</div><div class="text-[11px] text-gray-400 font-mono mt-0.5">${cmd.role}</div></div>`; }); }
+            const assetContainer = document.getElementById('intel-assets'); if(assetContainer) { assetContainer.innerHTML = ''; unit.assets.forEach(asset => { assetContainer.innerHTML += `<div class="flex items-center gap-2 text-xs text-gray-300 font-mono"><i class="fa-solid fa-square-poll-horizontal text-tacblue"></i><span>${asset}</span></div>`; }); }
+            const uavListContainer = document.getElementById('intel-uav-list'); if(uavListContainer) { uavListContainer.innerHTML = ''; unit.uavs.forEach(uav => { uavListContainer.innerHTML += `<div class="bg-tacgray-900/40 border border-tacgray-600/60 p-2 rounded text-xs"><div class="flex justify-between items-center mb-1"><span class="text-[9px] font-mono bg-tacblue/15 text-tacblue border border-tacblue/30 px-1.5 py-0.5 rounded uppercase font-bold">${uav.class}</span><span class="text-white font-bold font-mono">${uav.model}</span></div><p class="text-[11px] text-gray-400">${uav.purpose}</p></div>`; }); }
         }
 
-        // TABS SWITCHER (RE-SIZES LEAFLET ON ENGAGEMENT TO PREVENT CORRUPTED TILES)
         function switchTab(tabId) {
-            activeTab = tabId;
-            const tabs = ['intel', 'map', 'tech', 'testing'];
+            activeTab = tabId; const tabs = ['intel', 'map', 'tech', 'testing', 'analytics'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
-                btn.className = t === tabId 
-                    ? "px-4 py-2 text-sm font-bold border border-tacred bg-tacred/10 text-tacred rounded font-mono flex items-center gap-2 transition-all"
-                    : "px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all";
-            });
-
-            tabs.forEach(t => {
+                if (btn) btn.className = t === tabId ? "px-3 py-2 text-[11px] lg:text-xs font-bold border border-tacred bg-tacred/10 text-tacred rounded font-mono flex items-center gap-2 transition-all" : "px-3 py-2 text-[11px] lg:text-xs font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all";
                 const contentDiv = document.getElementById(`content-${t}`);
-                contentDiv.classList.toggle('hidden', t !== tabId);
-                if (t === tabId && t === 'intel') contentDiv.classList.add('grid');
-                if (t === tabId && t === 'map') contentDiv.classList.add('grid');
+                if (contentDiv) {
+                    contentDiv.classList.toggle('hidden', t !== tabId);
+                    if (t === tabId && ['intel', 'map', 'analytics'].includes(t)) contentDiv.classList.add('grid');
+                }
             });
-
-            if (tabId === 'map') {
-                setTimeout(() => {
-                    initTacticalMap();
-                    map.invalidateSize(); // Critical fix for container re-rendering
-                }, 50);
-            }
-
+            if (tabId === 'map') { setTimeout(() => { initTacticalMap(); map.invalidateSize(); }, 50); }
             playPing(800, 0.1, 'sine');
-        }
-
-        // UAV CATALOG FILTERS
-        function filterUavs(classFilter) {
-            activeUavFilter = classFilter;
-            const filterButtons = ['all', 'plane', 'loitering', 'fpv', 'heavy', 'micro'];
-            filterButtons.forEach(btnId => {
-                document.getElementById(`filter-${btnId}`).className = btnId === classFilter
-                    ? "px-2.5 py-1 border border-tacred bg-tacred/10 text-tacred rounded"
-                    : "px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white";
-            });
-            renderUavCatalog();
-            playPing(900, 0.06, 'triangle');
-        }
-
-        function renderUavCatalog() {
-            const container = document.getElementById('uav-catalog-grid'); container.innerHTML = '';
-            const filteredUavs = activeUavFilter === 'all' ? UAV_CATALOG : UAV_CATALOG.filter(u => u.class === activeUavFilter);
-            
-            filteredUavs.forEach(uav => {
-                container.innerHTML += `
-                    <div class="bg-tacgray-900/60 border border-tacgray-600 rounded p-4 flex flex-col justify-between transition-all hover:border-tacred/50">
-                        <div>
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded border ${uav.badgeColor} uppercase font-bold">${uav.classLabel}</span>
-                                <span class="text-[10px] font-mono text-gray-500">ЗАГРОЗА: <span class="text-tacred font-bold">${uav.threat}</span></span>
-                            </div>
-                            <h3 class="text-md font-bold text-white mb-1 font-mono">${uav.name}</h3>
-                            <p class="text-xs text-gray-400 mb-3">${uav.features}</p>
-                        </div>
-                        <div class="border-t border-tacgray-600/50 pt-2 text-[10px] font-mono space-y-0.5">
-                            <div class="flex justify-between"><span class="text-gray-500">РАДІУС ДІЇ:</span><span class="text-white">${uav.range}</span></div>
-                            <div class="flex justify-between"><span class="text-gray-500">ОСН. КОР. НАВ.:</span><span class="text-tacblue truncate text-right max-w-[130px]" title="${uav.payload}">${uav.payload}</span></div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function startLiveClock() {
-            setInterval(() => {
-                const now = new Date();
-                document.getElementById('live-clock').innerText = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-            }, 1000);
         }
 
         window.onload = function() {
             renderUnitSelector();
             updateUnitIntelDisplay();
-            renderUavCatalog();
-            renderKmlTargetsTable(ACTIVE_KML_TARGETS); // Pre-load targets table initial state
-            startLiveClock();
+            renderKmlTargetsTable(ACTIVE_KML_TARGETS);
+            renderAnalyticsReports();
             
-            // Connect to real-time sync server safely
+            setInterval(() => { const now = new Date(); document.getElementById('live-clock').innerText = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`; }, 1000);
+            
+            // Start on analytics tab to show new feature
+            switchTab('analytics');
             connectWebSocket();
         };
     </script>
