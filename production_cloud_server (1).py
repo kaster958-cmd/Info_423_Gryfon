@@ -1,86 +1,70 @@
-import json
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 import os
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
-import uvicorn
 
-app = FastAPI(title="War Room Console Server")
+# Ініціалізація FastAPI
+app = FastAPI(title="Tactical Analytics API", version="1.0")
 
-# Клас керування WebSocket з'єднаннями союзників
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections: list[WebSocket] = []
-        self.tactical_targets = []  # Серверна база даних тактичних цілей
+# Налаштування CORS (щоб фронтенд міг робити запити до бекенду)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-        # При підключенні нового союзника відразу відправляємо йому поточну базу цілей
-        if self.tactical_targets:
-            await websocket.send_text(json.dumps({
-                "type": "init_targets", 
-                "payload": self.tactical_targets
-            }))
+# Конфігурація Google Drive API
+SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
+SERVICE_ACCOUNT_FILE = 'credentials.json' 
+TARGET_FOLDER_ID = '1gFTEOPJRFErU-0cnUx1kmt6GC-hxirKZ' 
 
-    def disconnect(self, websocket: WebSocket):
-        if websocket in self.active_connections:
-            self.active_connections.remove(websocket)
+def get_drive_service():
+    """Аутентифікація та підключення до Google Drive API"""
+    if not os.path.exists(SERVICE_ACCOUNT_FILE):
+        raise FileNotFoundError(f"Файл ключів {SERVICE_ACCOUNT_FILE} не знайдено.")
+    
+    creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    return build('drive', 'v3', credentials=creds)
 
-    async def broadcast(self, message: str):
-        # Розсилаємо пакет даних усім активним союзникам у мережі
-        for connection in self.active_connections:
-            try:
-                await connection.send_text(message)
-            except Exception:
-                # Якщо з'єднання відвалилося, ігноруємо помилку, менеджер почистить його при дисконекті
-                pass
-
-manager = ConnectionManager()
-
-# Роздача тактичного інтерфейсу index.html
-@app.get("/")
-async def get_dashboard():
-    # На хмарному сервері index.html має лежати в тій самій папці
-    if os.path.exists("index.html"):
-        with open("index.html", "r", encoding="utf-8") as f:
-            html_content = f.read()
-        return HTMLResponse(content=html_content)
-    return HTMLResponse(content="<h3>Помилка: Файл index.html не знайдено на сервері.</h3>", status_code=404)
-
-# WebSocket канал для обміну координатами в реальному часі
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await manager.connect(websocket)
+@app.get("/api/v1/analytics/reports", tags=["Intelligence"])
+async def get_pdf_reports():
+    """Ендпоінт для отримання списку PDF-звітів з Google Диску"""
     try:
-        while True:
-            # Очікування трансляції від будь-кого з операторів
-            data = await websocket.receive_text()
-            message = json.loads(data)
+        service = get_drive_service()
+        
+        # Шукаємо тільки PDF файли у визначеній папці
+        query = f"'{TARGET_FOLDER_ID}' in parents and mimeType='application/pdf' and trashed=false"
+        
+        results = service.files().list(
+            q=query,
+            pageSize=50,
+            fields="files(id, name, createdTime, webViewLink, webContentLink)",
+            orderBy="createdTime desc"
+        ).execute()
+        
+        items = results.get('files', [])
+        
+        # Форматуємо відповідь для дашборду
+        formatted_reports = []
+        for item in items:
+            formatted_reports.append({
+                "id": item.get('id'),
+                "name": item.get('name'),
+                "date": item.get('createdTime').split('T')[0],
+                "view_url": item.get('webViewLink'), # Лінк для перегляду в браузері
+                "download_url": item.get('webContentLink') # Лінк для прямого завантаження
+            })
             
-            if message.get("type") == "new_targets":
-                new_targets = message.get("payload", [])
-                
-                # Об'єднуємо унікальні цілі на сервері, щоб уникнути дублів
-                existing_ids = {t["id"] for t in manager.tactical_targets if "id" in t}
-                for nt in new_targets:
-                    if nt.get("id") not in existing_ids:
-                        manager.tactical_targets.append(nt)
-                
-                # Миттєво надсилаємо оновлену базу цілей усім союзникам
-                await manager.broadcast(json.dumps({
-                    "type": "update_targets",
-                    "payload": manager.tactical_targets
-                }))
-                
-    except WebSocketDisconnect:
-        manager.disconnect(websocket)
+        return {"status": "success", "count": len(formatted_reports), "data": formatted_reports}
+
     except Exception as e:
-        print(f"Помилка сокету: {e}")
-        manager.disconnect(websocket)
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    # Хмарні сервери (Render, Heroku, Railway) призначають порт динамічно через змінну PORT.
-    # Якщо змінна відсутня, використовуємо стандартний локальний порт 8000.
-    port = int(os.environ.get("PORT", 8000))
-    print(f"🚀 Запуск тактичного сервера на порту {port}...")
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    import uvicorn
+    # Запуск сервера на порту 8000
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
