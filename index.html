@@ -49,12 +49,10 @@
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
         
-        /* Dark Theme overrides for Leaflet map markers and controls */
         .leaflet-popup-content-wrapper { background: #0b0f19 !important; color: #fff !important; border: 1px solid #f59e0b; border-radius: 4px; }
         .leaflet-popup-tip { background: #f59e0b !important; }
         .leaflet-control-zoom-in, .leaflet-control-zoom-out { background: #1e293b !important; color: #fff !important; border: 1px solid #334155 !important; }
         
-        /* Classes for stale/archived markers */
         .marker-stale { filter: grayscale(100%); opacity: 0.5; }
     </style>
 </head>
@@ -117,7 +115,7 @@
                     <button onclick="switchTab('intel')" id="tab-intel" class="px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
                         <i class="fa-solid fa-users-viewfinder"></i> 01: ТАКТИЧНИЙ ПРОФІЛЬ
                     </button>
-                    <button onclick="switchTab('map')" id="tab-map" class="px-4 py-2 text-sm font-bold border border-tacred bg-tacred/10 text-tacred rounded font-mono flex items-center gap-2 transition-all">
+                    <button onclick="switchTab('map')" id="tab-map" class="px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
                         <i class="fa-solid fa-map-location-dot"></i> 02: ГЕО-КАРТА
                     </button>
                     <button onclick="switchTab('tech')" id="tab-tech" class="px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all">
@@ -139,7 +137,7 @@
                     </div>
                     <div id="gis-status" class="text-xs font-mono text-tacred bg-tacred/10 border border-tacred/30 px-3 py-1.5 rounded flex items-center gap-2 transition-all">
                         <span id="gis-status-ping" class="inline-block h-2 w-2 bg-tacred rounded-full animate-ping"></span>
-                        <span id="gis-status-text">GIS LINK STATUS: CONNECTING</span>
+                        <span id="gis-status-text">GIS LINK STATUS: OFFLINE</span>
                     </div>
                 </div>
             </div>
@@ -187,7 +185,7 @@
                                 <p class="text-sm text-gray-300 leading-relaxed" id="intel-desc-tactics">-</p>
                             </div>
                             <div class="border-t border-tacgray-600 pt-4">
-                                <h3 class="text-sm font-mono text-tacyellow uppercase tracking-wider mb-3"><i class="fa-solid fa-cubes"></i> Склад безпілотного флоту підрозділу за класами</h3>
+                                <h3 class="text-sm font-mono text-tacyellow uppercase tracking-wider mb-3"><i class="fa-solid fa-cubes"></i> Склад безпілотного флоту</h3>
                                 <div id="intel-uav-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                             </div>
                         </div>
@@ -222,7 +220,7 @@
                 </div>
             </div>
 
-            <div id="content-map" class="tab-content flex-grow grid grid-cols-1 md:grid-cols-12 gap-4 bg-tacgray-800 border border-tacgray-600 rounded p-4 min-h-[500px]">
+            <div id="content-map" class="tab-content flex-grow hidden grid-cols-1 md:grid-cols-12 gap-4 bg-tacgray-800 border border-tacgray-600 rounded p-4 min-h-[500px]">
                 <div class="md:col-span-3 flex flex-col gap-4 justify-between overflow-y-auto max-h-[480px] pr-1">
                     <div class="space-y-4">
                         <div class="border-b border-tacgray-600 pb-2">
@@ -250,9 +248,7 @@
                             </div>
                             
                             <div class="border-t border-tacgray-700 pt-3">
-                                <div class="text-[10px] font-mono text-gray-500 mb-2 uppercase tracking-wider flex justify-between items-center">
-                                    <span>Тактичні об'єкти та KML:</span>
-                                </div>
+                                <div class="text-[10px] font-mono text-gray-500 mb-2 uppercase tracking-wider">Тактичні об'єкти та KML:</div>
                                 <div class="space-y-2.5 pl-1">
                                     <label class="flex items-center gap-3 cursor-pointer text-sm font-mono text-white">
                                         <input type="checkbox" id="layer-kml" checked onchange="toggleMapLayer('kml')" class="accent-amber-500 h-4 w-4 rounded">
@@ -301,7 +297,7 @@
                         </div>
 
                         <div class="border-t border-tacgray-600 pt-2">
-                            <h4 class="text-xs font-mono font-bold text-gray-400 mb-2 uppercase">Швидкий фокус на підрозділ:</h4>
+                            <h4 class="text-xs font-mono font-bold text-gray-400 mb-2 uppercase">Швидкий фокус:</h4>
                             <div class="grid grid-cols-1 gap-1.5 overflow-y-auto max-h-[120px] text-xs pr-1" id="map-shortcut-container">
                                 </div>
                         </div>
@@ -331,7 +327,7 @@
                                         <th class="p-2 border-b border-tacgray-600">Місце дислокації</th>
                                         <th class="p-2 border-b border-tacgray-600">Командир / Розрахунок</th>
                                         <th class="p-2 border-b border-tacgray-600">Опис та спорядження</th>
-                                        <th class="p-2 border-b border-tacgray-600 text-center">Координати / Дія</th>
+                                        <th class="p-2 border-b border-tacgray-600 text-center">Дія</th>
                                     </tr>
                                 </thead>
                                 <tbody id="kml-targets-table-body" class="divide-y divide-tacgray-700/50">
@@ -365,8 +361,6 @@
                             <button onclick="filterUavs('plane')" id="filter-plane" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">Літакові</button>
                             <button onclick="filterUavs('loitering')" id="filter-loitering" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">Баражуючі</button>
                             <button onclick="filterUavs('fpv')" id="filter-fpv" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">FPV-Ударні</button>
-                            <button onclick="filterUavs('heavy')" id="filter-heavy" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">Важкі Нічні</button>
-                            <button onclick="filterUavs('micro')" id="filter-micro" class="px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white">Мікро-коптери</button>
                         </div>
                     </div>
                 </div>
@@ -393,18 +387,18 @@
                     <div class="space-y-4">
                         <h3 class="text-lg font-bold text-white border-b border-tacgray-600 pb-2"><i class="fa-solid fa-network-wired text-tacblue"></i> ЦЕНТР ОБОРОННИХ ТЕХНОЛОГІЙ «РУБИКОН» МО РФ</h3>
                         <p class="text-sm text-gray-400 leading-relaxed">
-                            Спеціалізований державний координаційний центр під кураторством Міністерства оборони РФ, створений для швидкого подолання бюрократичного розриву між приватними/волонтерськими КБ та бойовими частинами.
+                            Спеціалізований державний координаційний центр під кураторством Міністерства оборони РФ, створений для подолання розриву між волонтерськими КБ та бойовими частинами.
                         </p>
                     </div>
                     <div class="bg-tacgray-900/60 border border-tacgray-600 p-5 rounded flex flex-col justify-between">
-                        <div class="mt-4 bg-tacred/10 border border-tacred/30 p-3 rounded text-center text-xs font-mono text-tacred">
-                            [УВАГА: Дані тестування безпосередньо передаються на заводи Уралу та Хабаровська для миттєвого масштабування в серію]
+                        <div class="bg-tacred/10 border border-tacred/30 p-3 rounded text-center text-xs font-mono text-tacred">
+                            [УВАГА: Дані тестування безпосередньо передаються на заводи для миттєвого масштабування в серію]
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="content-analytics" class="tab-content flex-grow hidden grid grid-cols-1 md:grid-cols-12 gap-4 bg-tacgray-800 border border-tacgray-600 rounded p-4">
+            <div id="content-analytics" class="tab-content flex-grow hidden grid-cols-1 md:grid-cols-12 gap-4 bg-tacgray-800 border border-tacgray-600 rounded p-4">
                 <div class="md:col-span-4 flex flex-col gap-4">
                     <div class="bg-tacgray-900 border border-tacgray-600 rounded p-2 h-[340px] relative overflow-hidden glow-red">
                         <div class="absolute top-0 left-0 bg-tacred/80 text-white text-[10px] font-mono px-2 py-1 z-10 rounded-br">ОПЕРАТИВНА ОБСТАНОВКА (ППО)</div>
@@ -415,7 +409,7 @@
                             <i class="fa-brands fa-google-drive"></i> Синхронізація хмари
                         </h3>
                         <p class="text-xs text-gray-400 mb-4">Статус підключення до Google API: <span class="text-tacyellow">ОЧІКУВАННЯ БЕКЕНДУ</span></p>
-                        <button onclick="showCustomNotification('Синхронізація недоступна без активного бекенд-сервера.')" class="w-full bg-tacblue/20 border border-tacblue text-tacblue hover:bg-tacblue/40 font-mono text-xs py-2 rounded transition-all">
+                        <button onclick="showCustomNotification('Синхронізація запущена... бекенд недоступний')" class="w-full bg-tacblue/20 border border-tacblue text-tacblue hover:bg-tacblue/40 font-mono text-xs py-2 rounded transition-all">
                             ОНОВИТИ ІНДЕКС ДОКУМЕНТІВ
                         </button>
                     </div>
@@ -434,16 +428,6 @@
                             <a href="https://drive.google.com/file/d/1vc2sn2eO8DMuRrNcKKT6eUyKJDjC1chY/view?usp=drive_link" target="_blank" class="bg-tacblue hover:bg-blue-600 px-3 py-1.5 rounded text-xs text-white font-mono flex items-center gap-2 transition-all">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Відкрити
                             </a>
-                        </div>
-                        <div class="bg-tacgray-800 border border-tacgray-600 p-3 rounded flex justify-between items-center hover:border-tacblue transition-all cursor-pointer opacity-70">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-file-pdf text-tacred text-2xl"></i>
-                                <div>
-                                    <div class="text-sm font-bold text-white">Звіт_по_РЕБ_Волнорез_Травень.pdf</div>
-                                    <div class="text-[10px] text-gray-400 font-mono">Завантажено: 2026-05-25 | Джерело: Локальний архів</div>
-                                </div>
-                            </div>
-                            <button onclick="showCustomNotification('Локальний файл недоступний.')" class="bg-tacgray-700 hover:bg-tacgray-600 px-3 py-1.5 rounded text-xs text-white font-mono">Перегляд</button>
                         </div>
                     </div>
                 </div>
@@ -474,7 +458,6 @@
                         <option value="kml">ПОЗИЦІЯ / ПУ БпЛА (Стандарт)</option>
                         <option value="ew">СТАНЦІЯ РЕБ / РЕР</option>
                         <option value="logistics">ЛОГІСТИКА / СКЛАДИ (БК/ПММ)</option>
-                        <option value="irregular">ЖИВА СИЛА (Піхота/Укриття)</option>
                     </select>
                 </div>
                 <div>
@@ -493,7 +476,7 @@
                 </div>
                 <div>
                     <label class="block text-gray-400 font-mono mb-1">ДЕТАЛЬНИЙ ОПИС ТА СПОРЯДЖЕННЯ:</label>
-                    <textarea id="manual-description" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded h-20 resize-none focus:outline-none focus:border-tacblue" placeholder="Наприклад: Виявлено КСП ворога, мобільний РЕБ Волнорез..."></textarea>
+                    <textarea id="manual-description" class="w-full bg-tacgray-900 border border-tacgray-600 px-3 py-2 text-white rounded h-20 resize-none focus:outline-none focus:border-tacblue" placeholder="Наприклад: Виявлено КСП ворога, мобільний РЕБ..."></textarea>
                 </div>
                 
                 <div class="flex gap-3 pt-2">
@@ -509,7 +492,7 @@
             <span class="text-xs font-mono text-tacred font-bold uppercase shrink-0">SIGINT STREAM:</span>
             <div class="bg-black/40 border border-tacgray-600 px-4 py-1.5 rounded w-full overflow-hidden">
                 <div id="scrolling-terminal" class="text-xs font-mono text-tacgreen truncate">
-                    [22:34:15] ОЧІКУВАННЯ ПІДКЛЮЧЕННЯ ДО ТАКТИЧНОЇ МЕРЕЖІ WEB_GEOSPATIAL_STREAM...
+                    [11:13:34] ОЧІКУВАННЯ ПІДКЛЮЧЕННЯ ДО ТАКТИЧНОЇ МЕРЕЖІ WEB_GEOSPATIAL_STREAM...
                 </div>
             </div>
         </div>
@@ -525,25 +508,35 @@
                 meta: "РЕГУЛЯРНИЙ ПОЛК ВБС РФ // СВЕРДЛОВСЬКА ОБЛ.", threat: "9.8/10", personnel: "~1,500 осіб", frequencies: "430-470 / 1.2 GHz", mainUav: "SuperCam / Lancet-3", reb: "Ешелонований купол", layer: "regular", lat: 47.625, lng: 36.452,
                 originDesc: "Сформований як головний 'технологічний кулак' у рамках реформи створення регулярних Військ безпілотних систем (ВБС) РФ.",
                 tacticalDesc: "Полк спеціалізується на створенні суцільних зон розвідувального покриття. Застосовують концепцію 'винесених щогл'.",
-                uavs: [{ class: "Літаковий", model: "SuperCam", purpose: "Розвідка" }, { class: "Баражуючий", model: "Lancet-3", purpose: "Удар" }],
+                uavs: [{ class: "Літаковий", model: "SuperCam", purpose: "Розвідка" }, { class: "Баражуючий", model: "Lancet-3", purpose: "Ударний" }],
                 commanders: [{ name: "СЕМЕНЮТА В. С.", rank: "Підполковник", role: "Командир" }],
                 assets: ["Orlan-30", "Lancet"],
                 intercept: "СЕМЕНЮТА В.С.: Перенести основний вектор ведення повітряної розвідки..."
+            },
+            {
+                id: "unit-68", name: "68-й Окремий батальйон розвідки", shortName: "68-й ОБР (СпП)",
+                meta: "ГРУ / СПЕЦНАЗ РФ // ТАКТИЧНА РОЗВІДКА", threat: "8.5/10", personnel: "~400 осіб", frequencies: "868-915 MHz", mainUav: "Zala 421-16E", reb: "Мобільні станції", layer: "spec", lat: 47.410, lng: 36.620,
+                originDesc: "Підрозділ спеціальної розвідки під кураторством ГРУ, орієнтований на глибоке проникнення та корекцію високоточного озброєння.",
+                tacticalDesc: "Діють малими групами, запускають розвідувальні крила в режимі радіомовчання.",
+                uavs: [{ class: "Літаковий", model: "Zala", purpose: "Оптична розвідка" }],
+                commanders: [{ name: "НЕВЗОРОВ А.П.", rank: "Майор", role: "ТВО Командира" }],
+                assets: ["Zala", "Вандал"],
+                intercept: "РАДІОПЕРЕХОПЛЕННЯ: Група 3 вийшла в район призначення, розгортає комплекс..."
             }
         ];
 
         const STALE_DAYS_LIMIT = 3;
 
         const KML_TACTICAL_TARGETS = [
-            { id: "kml-tgt-1", codeName: "РЕБ-Вектор (Свіжа)", city: "Старомлинівка", leader: "лейтенант Савельєв А.Г.", description: "окопний купол РЕБ Волнорез, АК-74 - 2 шт., радіостанція Азарт. Пункт радіоконтролю.", lat: 47.6950, lng: 36.8310, timestamp: "2026-05-28", fieldType: "ew" },
-            { id: "kml-tgt-2", codeName: "КСП Піхоти (Архівна)", city: "Володарське", leader: "ст. м-с Ли Денис Камбаевич", description: "бронежилет - 1 шт. бронешлем - 1 шт. аптечка - 1 шт. АК-74 - 1 шт., місця стоянки транспорту", lat: 47.2025, lng: 37.3106, timestamp: "2026-05-20", fieldType: "kml" },
+            { id: "kml-tgt-1", codeName: "РЕБ-Вектор (Свіжа)", city: "Старомлинівка", leader: "лейтенант Савельєв А.Г.", description: "окопний купол РЕБ Волнорез, АК-74 - 2 шт., радіостанція Азарт.", lat: 47.6950, lng: 36.8310, timestamp: "2026-05-28", fieldType: "ew" },
+            { id: "kml-tgt-2", codeName: "КСП Піхоти (Архівна)", city: "Володарське", leader: "ст. м-с Ли Денис Камбаевич", description: "місця стоянки транспорту, особовий склад до 10 осіб.", lat: 47.2025, lng: 37.3106, timestamp: "2026-05-20", fieldType: "kml" },
             { id: "kml-tgt-3", codeName: "Склад БК (Імпорт)", city: "Пологи (Вузол)", leader: "Невідомий (Комендатура)", description: "Місце розвантаження БК з залізничної гілки. Помічено рух КамАЗів.", lat: 47.4800, lng: 36.2500, timestamp: "2026-05-29", fieldType: "logistics" },
             { id: "kml-tgt-4", codeName: "База ПММ (Імпорт)", city: "Кам'янка", leader: "Тилове забезпечення", description: "Замасковані цистерни в ангарах сільгосптехніки.", lat: 47.3500, lng: 36.6800, timestamp: "2026-05-28", fieldType: "logistics" }
         ];
 
         const UAV_CATALOG = [
-            { name: "Орлан-30", class: "plane", classLabel: "Літаковий розвідник", range: "до 120 км", payload: "Лазерний цілевказівник (для снарядів «Краснополь»)", features: "Стійка цифрова решітка Комета-М, робота на висотах до 5 км", threat: "Критична", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
-            { name: "Вандал «Гроза»", class: "fpv", classLabel: "Оптоволоконний FPV", range: "10-15 км", payload: "Кумулятивний / Термобаричний снаряд", features: "Повний імунітет до засобів РЕБ через кабельне передавання сигналу", threat: "Критична", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" }
+            { name: "Орлан-30", class: "plane", classLabel: "Літаковий розвідник", range: "до 120 км", payload: "Лазерний цілевказівник", features: "Стійка цифрова решітка Комета-М", threat: "Критична", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" },
+            { name: "Вандал «Гроза»", class: "fpv", classLabel: "Оптоволоконний FPV", range: "10-15 км", payload: "Кумулятивний снаряд", features: "Повний імунітет до засобів РЕБ через кабель", threat: "Критична", badgeColor: "bg-tacred/20 text-tacred border-tacred/40" }
         ];
 
         let ACTIVE_KML_TARGETS = [...KML_TACTICAL_TARGETS];
@@ -563,14 +556,13 @@
         let isRouteModeActive = false;
         let currentRouteCoords = [];
         let tempRoutePolyline = null;
-        let savedRoutes = [];
 
         // --- ЛОГІКА ТАЙМІНГУ ---
         function isTargetStale(timestampStr) {
             if (!timestampStr) return false;
             const targetDate = new Date(timestampStr);
             const currentDate = new Date(); 
-            const diffTime = Math.abs(currentDate - targetDate);
+            const diffTime = currentDate - targetDate;
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
             return diffDays > STALE_DAYS_LIMIT;
         }
@@ -581,7 +573,6 @@
             if (layerGroupsStorage.kml) layerGroupsStorage.kml.clearLayers();
             if (layerGroupsStorage.ew) layerGroupsStorage.ew.clearLayers();
             if (layerGroupsStorage.logistics) layerGroupsStorage.logistics.clearLayers();
-            if (layerGroupsStorage.irregular) layerGroupsStorage.irregular.clearLayers();
             mapKmlMarkersStorage = [];
 
             const showStaleToggle = document.getElementById('layer-stale');
@@ -601,7 +592,7 @@
                 let targetLayer = isLogistics ? layerGroupsStorage.logistics : (isEw ? layerGroupsStorage.ew : layerGroupsStorage.kml);
 
                 let opacityClass = stale ? 'marker-stale' : 'opacity-100';
-                let staleBadgeMap = stale ? `<span class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[8px] uppercase tracking-wider border border-gray-500"><i class="fa-solid fa-clock-rotate-left"></i> Архів</span>` : '';
+                let staleBadgeMap = stale ? `<span class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[8px] uppercase border border-gray-500"><i class="fa-solid fa-clock-rotate-left"></i> Архів</span>` : '';
 
                 let targetIcon = L.divIcon({
                     className: `custom-kml-target-pin ${opacityClass}`,
@@ -628,8 +619,8 @@
                         <div class="text-[10px] text-tacblue font-mono">ЛОКАЦІЯ: ${tgt.city}</div>
                         <div class="text-gray-300 text-[11px] mt-1.5 leading-relaxed bg-tacgray-900/90 p-1.5 border border-tacgray-700 rounded">${tgt.description}</div>
                         <div class="mt-2 flex gap-1.5">
-                            <button onclick="copyToClipboard('${tgt.lat.toFixed(6)}, ${tgt.lng.toFixed(6)}')" class="flex-1 bg-tacgray-700 hover:bg-tacgray-600 text-white font-mono py-1 px-1 rounded text-[9px] uppercase transition-all">Копіювати</button>
-                            <button onclick="focusMapOnKmlTarget('${tgt.id}')" class="flex-1 bg-tacyellow text-tacgray-900 font-bold py-1 px-1 rounded text-[9px] uppercase transition-all">Фокус</button>
+                            <button onclick="copyToClipboard('${tgt.lat.toFixed(6)}, ${tgt.lng.toFixed(6)}')" class="flex-1 bg-tacgray-700 hover:bg-tacgray-600 text-white font-mono py-1 px-1 rounded text-[9px] uppercase">Копіювати</button>
+                            <button onclick="focusMapOnKmlTarget('${tgt.id}')" class="flex-1 bg-tacyellow text-tacgray-900 font-bold py-1 px-1 rounded text-[9px] uppercase">Фокус</button>
                         </div>
                     </div>
                 `;
@@ -637,11 +628,7 @@
                 let marker = L.marker([tgt.lat, tgt.lng], { icon: targetIcon }).bindPopup(popupContent);
                 mapKmlMarkersStorage.push({ id: tgt.id, marker: marker, data: tgt });
                 
-                if(tgt.fieldType === 'irregular' && layerGroupsStorage.irregular) {
-                    layerGroupsStorage.irregular.addLayer(marker);
-                } else if (targetLayer) {
-                    targetLayer.addLayer(marker);
-                }
+                if (targetLayer) targetLayer.addLayer(marker);
             });
         }
 
@@ -663,9 +650,7 @@
 
                 tableBody.innerHTML += `
                     <tr class="${rowStyle} transition-colors border-b border-tacgray-700/50">
-                        <td class="p-2 font-bold text-tacyellow flex items-center">
-                            ${tgt.codeName} ${staleLabel}
-                        </td>
+                        <td class="p-2 font-bold text-tacyellow flex items-center">${tgt.codeName} ${staleLabel}</td>
                         <td class="p-2 text-tacblue">${tgt.city}</td>
                         <td class="p-2 text-white font-sans text-[11px]">${tgt.leader}</td>
                         <td class="p-2 text-gray-400 text-[11px] font-sans truncate max-w-[280px]" title="${tgt.description}">${tgt.description}</td>
@@ -674,9 +659,7 @@
                                 <button onclick="copyToClipboard('${tgt.lat.toFixed(6)}, ${tgt.lng.toFixed(6)}')" class="bg-tacgray-800 hover:bg-tacgray-700 text-gray-300 px-1.5 py-0.5 rounded text-[9px] border border-tacgray-600">
                                     <i class="fa-solid fa-copy"></i>
                                 </button>
-                                <button onclick="focusMapOnKmlTarget('${tgt.id}')" class="bg-tacyellow hover:bg-yellow-600 text-tacgray-900 px-1.5 py-0.5 rounded text-[9px] font-bold">
-                                    📍 ФОКУС
-                                </button>
+                                <button onclick="focusMapOnKmlTarget('${tgt.id}')" class="bg-tacyellow hover:bg-yellow-600 text-tacgray-900 px-1.5 py-0.5 rounded text-[9px] font-bold">📍 ФОКУС</button>
                             </div>
                         </td>
                     </tr>
@@ -687,8 +670,7 @@
         function toggleStaleTargets() {
             renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
             renderKmlTargetsTable(ACTIVE_KML_TARGETS);
-            const isChecked = document.getElementById('layer-stale').checked;
-            playPing(isChecked ? 700 : 500, 0.05, 'sine');
+            playPing(document.getElementById('layer-stale').checked ? 700 : 500, 0.05);
         }
 
         function toggleMapLayer(layerKey) {
@@ -696,14 +678,13 @@
             let isChecked = document.getElementById(`layer-${layerKey}`).checked;
             if (isChecked) {
                 map.addLayer(layerGroupsStorage[layerKey]);
-                playPing(700, 0.05, 'sine');
             } else {
                 map.removeLayer(layerGroupsStorage[layerKey]);
-                playPing(500, 0.05, 'sine');
             }
+            playPing(isChecked ? 700 : 500, 0.05);
         }
 
-        // --- УПРАВЛІННЯ РЕЖИМАМИ РУЧНОГО ОЦІНЮВАННЯ ---
+        // --- УПРАВЛІННЯ РЕЖИМАМИ КАРТИ ---
         function toggleManualPlacementMode() {
             isManualPlacementActive = !isManualPlacementActive;
             isRouteModeActive = false;
@@ -717,7 +698,7 @@
 
             if (isManualPlacementActive) {
                 btnPoint.className = "w-full bg-tacyellow text-tacgray-900 border border-tacyellow px-2 py-2 rounded text-[10px] font-mono font-bold transition-all flex items-center justify-center gap-2 uppercase glow-blue animate-pulse";
-                showCustomNotification("РЕЖИМ НАНЕСЕННЯ ТОЧКИ АКТИВОВАНО: Клікніть на карті!");
+                showCustomNotification("РЕЖИМ ТОЧКИ: Клікніть на карті.");
                 if (mapContainer) mapContainer.style.cursor = "crosshair";
                 playPing(1000, 0.15, "triangle");
             } else {
@@ -738,131 +719,63 @@
 
             if (isRouteModeActive) {
                 btnRoute.className = "w-full bg-tacblue text-white border border-tacblue px-2 py-2 rounded text-[10px] font-mono font-bold transition-all flex items-center justify-center gap-2 uppercase glow-blue animate-pulse";
-                showCustomNotification("РЕЖИМ ТРЕКІВ: Клікайте для побудови. ПКМ - завершити.");
+                showCustomNotification("РЕЖИМ ТРЕКІВ: ЛКМ - вузол, ПКМ - зберегти.");
                 if (mapContainer) mapContainer.style.cursor = "crosshair";
                 currentRouteCoords = []; 
                 if (tempRoutePolyline && map) map.removeLayer(tempRoutePolyline);
             } else {
                 btnRoute.className = "w-full bg-tacgray-900/80 hover:bg-tacgray-700/80 border border-tacgray-600 text-gray-300 hover:text-white px-2 py-2 rounded text-[10px] font-mono font-bold transition-all flex items-center justify-center gap-2 uppercase";
                 if (mapContainer) mapContainer.style.cursor = "";
-                if (tempRoutePolyline && map) {
-                    map.removeLayer(tempRoutePolyline);
-                    tempRoutePolyline = null;
-                }
+                if (tempRoutePolyline && map) { map.removeLayer(tempRoutePolyline); tempRoutePolyline = null; }
             }
         }
 
-        // --- ОРБАТ ДИРЕКТОРІЯ ТА ПРОФІЛІ ---
-        function renderOrbatDirectory() {
-            const container = document.getElementById('unit-list');
-            if (!container) return;
-            container.innerHTML = '';
-            INTEL_DATABASE.forEach(unit => {
-                container.innerHTML += `
-                    <div onclick="selectUnitFromMap('${unit.id}')" class="p-3 bg-tacgray-900/50 border border-tacgray-600 rounded cursor-pointer hover:border-tacred transition-all">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-white">${unit.shortName}</span>
-                            <span class="text-[10px] text-tacred font-mono">${unit.threat}</span>
-                        </div>
-                        <div class="text-[10px] text-gray-400 font-mono mt-1">${unit.mainUav}</div>
-                    </div>
-                `;
-            });
+        function openManualTargetModal(lat, lng) {
+            tempPlacedLatLng = { lat: lat, lng: lng };
+            document.getElementById("manual-coords-display").value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            document.getElementById("manual-target-modal").classList.remove("hidden");
+            playPing(1100, 0.2);
         }
 
-        function selectUnitFromMap(id) {
-            selectedUnitId = id;
-            switchTab('intel');
-            const unit = INTEL_DATABASE.find(u => u.id === id);
-            if (!unit) return;
-
-            document.getElementById('intel-unit-name').innerText = unit.name;
-            document.getElementById('intel-unit-meta').innerText = unit.meta;
-            document.getElementById('intel-threat-score').innerText = unit.threat;
-            document.getElementById('metric-personnel').innerText = unit.personnel;
-            document.getElementById('metric-frequencies').innerText = unit.frequencies;
-            document.getElementById('metric-main-uav').innerText = unit.mainUav;
-            document.getElementById('metric-reb-level').innerText = unit.reb;
-            document.getElementById('intel-desc-origin').innerText = unit.originDesc;
-            document.getElementById('intel-desc-tactics').innerText = unit.tacticalDesc;
-            document.getElementById('intel-intercept').innerText = unit.intercept;
-
-            const uavListContainer = document.getElementById('intel-uav-list');
-            uavListContainer.innerHTML = '';
-            unit.uavs.forEach(uav => {
-                uavListContainer.innerHTML += `
-                    <div class="bg-tacgray-900/80 border border-tacgray-600 p-2 rounded text-xs">
-                        <span class="text-white font-bold">${uav.model}</span> 
-                        <span class="text-gray-500 font-mono">(${uav.class})</span> — ${uav.purpose}
-                    </div>
-                `;
-            });
+        function closeManualTargetModal() {
+            document.getElementById("manual-target-modal").classList.add("hidden");
+            tempPlacedLatLng = null;
         }
 
-        function renderShortcuts() {
-            const container = document.getElementById('map-shortcut-container');
-            if (!container) return;
-            container.innerHTML = '';
-            INTEL_DATABASE.forEach(unit => {
-                container.innerHTML += `
-                    <button onclick="map.setView([${unit.lat}, ${unit.lng}], 11); mapMarkersStorage['${unit.id}'].openPopup();" class="text-left text-tacblue hover:text-white transition-colors truncate">
-                        <i class="fa-solid fa-location-dot text-[10px]"></i> ${unit.shortName}
-                    </button>
-                `;
-            });
+        function submitManualTarget() {
+            const codename = document.getElementById("manual-codename").value.trim();
+            const city = document.getElementById("manual-city").value.trim() || "Не вказано";
+            const leader = document.getElementById("manual-leader").value.trim() || "Невідомий";
+            const description = document.getElementById("manual-description").value.trim() || "Немає опису";
+            const category = document.getElementById("manual-category").value;
+            
+            if (!codename) {
+                showCustomNotification("Помилка: Код цілі обов'язковий!");
+                return;
+            }
+
+            const newTarget = {
+                id: `kml-manual-${Date.now()}`,
+                codeName: codename, city: city, leader: leader, description: description,
+                lat: tempPlacedLatLng.lat, lng: tempPlacedLatLng.lng,
+                timestamp: new Date().toISOString().split('T')[0],
+                fieldType: category
+            };
+
+            ACTIVE_KML_TARGETS.push(newTarget);
+            renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
+            renderKmlTargetsTable(ACTIVE_KML_TARGETS);
+            showCustomNotification(`Ціль "${codename}" додана.`);
+            closeManualTargetModal();
         }
 
-        // --- КАТАЛОГ БпЛА ---
-        function renderUavCatalog() {
-            const container = document.getElementById('uav-catalog-grid');
-            if (!container) return;
-            container.innerHTML = '';
-            UAV_CATALOG.forEach(uav => {
-                if (activeUavFilter !== 'all' && uav.class !== activeUavFilter) return;
-                container.innerHTML += `
-                    <div class="bg-tacgray-900/80 border border-tacgray-600 p-4 rounded flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-start gap-2">
-                                <h4 class="text-white font-bold text-sm">${uav.name}</h4>
-                                <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border ${uav.badgeColor}">${uav.threat}</span>
-                            </div>
-                            <p class="text-[11px] text-tacblue font-mono mt-1">${uav.classLabel}</p>
-                            <div class="text-xs text-gray-400 mt-3 space-y-1">
-                                <div><span class="text-gray-500">Радіус:</span> ${uav.range}</div>
-                                <div><span class="text-gray-500">Корисне:</span> ${uav.payload}</div>
-                            </div>
-                        </div>
-                        <div class="text-[10px] font-mono bg-black/40 p-2 border border-tacgray-700 rounded mt-3 text-gray-300">
-                            ${uav.features}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function filterUavs(filterClass) {
-            activeUavFilter = filterClass;
-            const filters = ['all', 'plane', 'loitering', 'fpv', 'heavy', 'micro'];
-            filters.forEach(f => {
-                const btn = document.getElementById(`filter-${f}`);
-                if (!btn) return;
-                if (f === filterClass) {
-                    btn.className = "px-2.5 py-1 border border-tacred bg-tacred/10 text-tacred rounded";
-                } else {
-                    btn.className = "px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white";
-                }
-            });
-            renderUavCatalog();
-        }
-
-        // --- ІНІЦІАЛІЗАЦІЯ GIS КАРТИ ---
+        // --- ІНІЦІАЛІЗАЦІЯ КАРТИ ---
         function initTacticalMap() {
             if (map) return;
-            
             map = L.map('tactical-leaflet-map-div').setView([47.56, 36.65], 9);
 
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri'
+                attribution: 'Esri'
             }).addTo(map);
 
             for (let key in layerGroupsStorage) {
@@ -886,14 +799,13 @@
                     <div class="font-sans text-xs p-1">
                         <div class="font-bold border-b border-tacgray-600 pb-1 mb-1 text-tacred font-mono">${unit.shortName}</div>
                         <div class="text-gray-300 font-mono mb-1">FREQ: ${unit.frequencies}</div>
-                        <div class="text-gray-400 mb-2">${unit.meta.split(' // ')[0]}</div>
-                        <button onclick="selectUnitFromMap('${unit.id}')" class="w-full bg-tacred text-white font-bold py-1 px-2 rounded text-[10px] uppercase font-mono hover:bg-red-600 transition-all">ВІДКРИТИ ПРОФІЛЬ</button>
+                        <button onclick="selectUnitFromMap('${unit.id}')" class="w-full bg-tacred text-white font-bold py-1 px-2 rounded text-[10px] uppercase font-mono mt-1">ОТКРЫТЬ ПРОФИЛЬ</button>
                     </div>
                 `;
 
                 let marker = L.marker([unit.lat, unit.lng], { icon: markerIcon }).bindPopup(popupContent);
                 mapMarkersStorage[unit.id] = marker;
-                layerGroupsStorage[unit.layer].addLayer(marker);
+                if (layerGroupsStorage[unit.layer]) layerGroupsStorage[unit.layer].addLayer(marker);
             });
 
             map.on('mousemove', function(e) {
@@ -907,36 +819,18 @@
                     toggleManualPlacementMode(); 
                 } else if (isRouteModeActive) {
                     currentRouteCoords.push([e.latlng.lat, e.latlng.lng]);
-                    
-                    if (tempRoutePolyline) {
-                        map.removeLayer(tempRoutePolyline);
-                    }
-                    
-                    tempRoutePolyline = L.polyline(currentRouteCoords, {
-                        color: '#3b82f6', 
-                        weight: 3,
-                        dashArray: '5, 5',
-                        opacity: 0.8
-                    }).addTo(map);
-                    
+                    if (tempRoutePolyline) map.removeLayer(tempRoutePolyline);
+                    tempRoutePolyline = L.polyline(currentRouteCoords, { color: '#3b82f6', weight: 3, dashArray: '5, 5' }).addTo(map);
                     playPing(1200, 0.05, 'triangle');
                 }
             });
 
             map.on('contextmenu', function(e) {
                 if (isRouteModeActive && currentRouteCoords.length > 1) {
-                    let finalRoute = L.polyline(currentRouteCoords, {
-                        color: '#ef4444', 
-                        weight: 4,
-                        opacity: 0.9
-                    });
-                    
-                    finalRoute.bindPopup(`<div class="font-mono text-xs text-tacred font-bold">ОПЕРАТИВНИЙ МАРШРУТ</div><div class="text-[10px] text-gray-400">Точок: ${currentRouteCoords.length}</div>`);
+                    let finalRoute = L.polyline(currentRouteCoords, { color: '#ef4444', weight: 4 });
+                    finalRoute.bindPopup(`<div class="font-mono text-xs text-tacred font-bold">ОПЕРАТИВНИЙ МАРШРУТ</div>`);
                     layerGroupsStorage.routes.addLayer(finalRoute);
-                    savedRoutes.push(finalRoute);
-                    
-                    showCustomNotification("Маршрут успішно зафіксовано на карті.");
-                    playPing(1500, 0.15, 'sine');
+                    showCustomNotification("Маршрут зафіксовано.");
                     toggleRoutePlacementMode(); 
                 }
             });
@@ -945,102 +839,107 @@
             renderShortcuts();
         }
 
-        // --- УТИЛІТИ ТА СЛУЖБОВІ МЕТОДИ ---
-        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        
-        function playPing(frequency = 800, duration = 0.1, type = "sine") {
-            if (!isAudioOn) return; initAudio();
-            try {
-                let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
-                osc.type = type; osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + duration);
-            } catch (e) {}
-        }
-
-        function toggleAudio() {
-            isAudioOn = !isAudioOn; const btn = document.getElementById('audio-toggle');
-            const icon = document.getElementById('audio-icon'); const text = document.getElementById('audio-text');
-            if (isAudioOn) {
-                initAudio(); btn.classList.remove('text-tacblue', 'border-tacgray-600');
-                btn.classList.add('text-tacgreen', 'border-tacgreen/50', 'bg-tacgreen/10');
-                icon.className = "fa-solid fa-volume-high"; text.innerText = "AUDIO: ON"; playPing(1000, 0.2);
-            } else {
-                btn.classList.remove('text-tacgreen', 'border-tacgreen/50', 'bg-tacgreen/10');
-                btn.classList.add('text-tacblue', 'border-tacgray-600');
-                icon.className = "fa-solid fa-volume-xmark"; text.innerText = "AUDIO: OFF";
-            }
-        }
-
-        function handleKMLUpload(event) {
-            showCustomNotification("Імпорт локальних файлів тимчасово недоступний без активного бекенд-сервера.");
-        }
-
-        function reconnectWithCustomHost() {
-            const host = document.getElementById('ws-host-input').value || 'localhost:8000';
-            showCustomNotification(`Помилка WebSocket підключення до ${host}: Бекенд відсутній.`);
-        }
-
-        function copyToClipboard(text) {
-            let tempInput = document.createElement("input");
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-            showCustomNotification(`Координати ${text} скопійовано!`);
-            playPing(1400, 0.05, 'sine');
-        }
-
-        function showCustomNotification(message) {
-            const containerId = 'tac-notification-hub';
-            let hub = document.getElementById(containerId);
-            if (!hub) {
-                hub = document.createElement('div');
-                hub.id = containerId;
-                hub.className = 'fixed bottom-20 right-6 z-50 flex flex-col gap-2 max-w-sm font-sans';
-                document.body.appendChild(hub);
-            }
-
-            const alertCard = document.createElement('div');
-            alertCard.className = 'bg-tacgray-800 border-l-4 border-tacyellow p-3 text-xs text-white rounded shadow-2xl flex justify-between items-center gap-3';
-            alertCard.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-bell text-tacyellow"></i>
-                    <span>${message}</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            `;
-            
-            hub.appendChild(alertCard);
-            setTimeout(() => { alertCard.remove(); }, 5000);
-        }
-
         function focusMapOnKmlTarget(id) {
             let targetObj = mapKmlMarkersStorage.find(item => item.id === id);
             if (targetObj && map) {
                 let isEw = targetObj.data.fieldType === 'ew';
                 let isLogistics = targetObj.data.fieldType === 'logistics';
-                
                 let layerCheckboxId = isLogistics ? 'layer-logistics' : (isEw ? 'layer-ew' : 'layer-kml');
                 let layerGroup = isLogistics ? layerGroupsStorage.logistics : (isEw ? layerGroupsStorage.ew : layerGroupsStorage.kml);
 
                 document.getElementById(layerCheckboxId).checked = true;
-                if (!map.hasLayer(layerGroup)) {
-                    map.addLayer(layerGroup);
-                }
+                if (!map.hasLayer(layerGroup)) map.addLayer(layerGroup);
 
                 if (isTargetStale(targetObj.data.timestamp) && !document.getElementById('layer-stale').checked) {
                     document.getElementById('layer-stale').checked = true;
-                    toggleStaleTargets(); 
+                    toggleStaleTargets();
                 }
 
-                map.setView(targetObj.marker.getLatLng(), 13, { animate: true, duration: 1.2 });
-                setTimeout(() => { targetObj.marker.openPopup(); }, 1200);
-                playPing(1000, 0.1, 'triangle');
+                map.setView(targetObj.marker.getLatLng(), 13);
+                setTimeout(() => { targetObj.marker.openPopup(); }, 300);
             }
+        }
+
+        function selectUnitFromMap(id) {
+            selectedUnitId = id;
+            switchTab('intel');
+            updateIntelProfile(id);
+        }
+
+        // --- ДИНАМІЧНИЙ ІНТЕРФЕЙС ---
+        function updateIntelProfile(id) {
+            const unit = INTEL_DATABASE.find(u => u.id === id);
+            if (!unit) return;
+            document.getElementById('intel-unit-name').innerText = unit.name;
+            document.getElementById('intel-unit-meta').innerText = unit.meta;
+            document.getElementById('intel-threat-score').innerText = unit.threat;
+            document.getElementById('metric-personnel').innerText = unit.personnel;
+            document.getElementById('metric-frequencies').innerText = unit.frequencies;
+            document.getElementById('metric-main-uav').innerText = unit.mainUav;
+            document.getElementById('metric-reb-level').innerText = unit.reb;
+            document.getElementById('intel-desc-origin').innerText = unit.originDesc;
+            document.getElementById('intel-desc-tactics').innerText = unit.tacticalDesc;
+            document.getElementById('intel-intercept').innerText = unit.intercept;
+
+            const uavList = document.getElementById('intel-uav-list');
+            uavList.innerHTML = '';
+            unit.uavs.forEach(u => {
+                uavList.innerHTML += `<div class="bg-tacgray-900/80 p-2 border border-tacgray-600 rounded text-xs"><span class="text-tacyellow font-bold">${u.model}</span> (${u.class}) - ${u.purpose}</div>`;
+            });
+        }
+
+        function renderOrbatDirectory() {
+            const container = document.getElementById('unit-list');
+            if(!container) return;
+            container.innerHTML = '';
+            INTEL_DATABASE.forEach(u => {
+                container.innerHTML += `
+                    <div onclick="selectUnitFromMap('${u.id}')" class="p-3 bg-tacgray-900/60 border border-tacgray-600 rounded cursor-pointer hover:border-tacred transition-all">
+                        <div class="text-sm font-bold text-white">${u.shortName}</div>
+                        <div class="text-[10px] font-mono text-gray-400 mt-1">Загроза: ${u.threat} | ФОКУС: ${u.lat}, ${u.lng}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderShortcuts() {
+            const container = document.getElementById('map-shortcut-container');
+            if(!container) return;
+            container.innerHTML = '';
+            INTEL_DATABASE.forEach(u => {
+                container.innerHTML += `
+                    <button onclick="map.setView([${u.lat}, ${u.lng}], 12); mapMarkersStorage['${u.id}'].openPopup();" class="text-left text-tacblue hover:text-white truncate font-mono">⚡ ${u.shortName}</button>
+                `;
+            });
+        }
+
+        function renderUavCatalog() {
+            const grid = document.getElementById('uav-catalog-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+            UAV_CATALOG.forEach(u => {
+                if(activeUavFilter !== 'all' && u.class !== activeUavFilter) return;
+                grid.innerHTML += `
+                    <div class="bg-tacgray-900 border border-tacgray-600 p-4 rounded flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start"><h4 class="text-md font-bold text-white">${u.name}</h4><span class="text-[10px] px-1.5 py-0.5 rounded font-mono ${u.badgeColor}">${u.threat}</span></div>
+                            <p class="text-xs text-tacblue mt-1 font-mono">${u.classLabel}</p>
+                            <div class="text-[11px] text-gray-400 mt-3 space-y-1"><div>🎯 Дальність: ${u.range}</div><div>📦 Навантаження: ${u.payload}</div></div>
+                        </div>
+                        <div class="text-[10px] font-mono bg-black/40 p-1.5 border border-tacgray-700 rounded mt-3 text-gray-300">${u.features}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterUavs(filter) {
+            activeUavFilter = filter;
+            const buttons = ['all', 'plane', 'loitering', 'fpv'];
+            buttons.forEach(b => {
+                const btn = document.getElementById(`filter-${b}`);
+                if(btn) btn.className = b === filter ? "px-2.5 py-1 border border-tacred bg-tacred/10 text-tacred rounded" : "px-2.5 py-1 border border-tacgray-600 text-gray-400 rounded hover:text-white";
+            });
+            renderUavCatalog();
         }
 
         function switchTab(tabId) {
@@ -1048,11 +947,9 @@
             const tabs = ['intel', 'map', 'tech', 'testing', 'analytics'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
-                if (btn) {
-                    btn.className = t === tabId 
-                        ? "px-4 py-2 text-sm font-bold border border-tacred bg-tacred/10 text-tacred rounded font-mono flex items-center gap-2 transition-all"
-                        : "px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all";
-                }
+                if (btn) btn.className = t === tabId 
+                    ? "px-4 py-2 text-sm font-bold border border-tacred bg-tacred/10 text-tacred rounded font-mono flex items-center gap-2 transition-all"
+                    : "px-4 py-2 text-sm font-bold border border-tacgray-600 text-gray-400 hover:text-white rounded font-mono flex items-center gap-2 transition-all";
             });
 
             tabs.forEach(t => {
@@ -1063,10 +960,64 @@
                 }
             });
 
-            if (tabId === 'map' && map) {
-                setTimeout(() => { map.invalidateSize(); }, 50);
+            if (tabId === 'map') {
+                setTimeout(() => { initTacticalMap(); map.invalidateSize(); }, 50);
             }
-            playPing(800, 0.1, 'sine');
+            playPing(800, 0.1);
+        }
+
+        // --- СЛУЖБОВІ ФУНКЦІЇ ---
+        function toggleAudio() {
+            isAudioOn = !isAudioOn; const btn = document.getElementById('audio-toggle');
+            const icon = document.getElementById('audio-icon'); const text = document.getElementById('audio-text');
+            if (isAudioOn) {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                btn.className = "px-3 py-1.5 border border-tacgreen/50 bg-tacgreen/10 text-tacgreen rounded flex items-center gap-2 transition-all font-mono text-xs";
+                icon.className = "fa-solid fa-volume-high"; text.innerText = "AUDIO: ON"; playPing(1000, 0.2);
+            } else {
+                btn.className = "px-3 py-1.5 border border-tacgray-600 bg-tacgray-900/50 text-tacblue rounded flex items-center gap-2 transition-all font-mono text-xs";
+                icon.className = "fa-solid fa-volume-xmark"; text.innerText = "AUDIO: OFF";
+            }
+        }
+
+        function playPing(frequency = 800, duration = 0.1, type = "sine") {
+            if (!isAudioOn || !audioCtx) return;
+            try {
+                let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+                osc.type = type; osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCustomNotification(`Координати скопійовано!`);
+                playPing(1400, 0.05);
+            });
+        }
+
+        function showCustomNotification(message) {
+            let hub = document.getElementById('tac-notification-hub');
+            if (!hub) {
+                hub = document.createElement('div'); hub.id = 'tac-notification-hub';
+                hub.className = 'fixed bottom-20 right-6 z-50 flex flex-col gap-2 max-w-sm font-sans';
+                document.body.appendChild(hub);
+            }
+            const card = document.createElement('div');
+            card.className = 'bg-tacgray-800 border-l-4 border-tacyellow p-3 text-xs text-white rounded shadow-2xl flex justify-between items-center gap-3 animate-pulse';
+            card.innerHTML = `<div><i class="fa-solid fa-bell text-tacyellow mr-2"></i>${message}</div>`;
+            hub.appendChild(card);
+            setTimeout(() => { card.remove(); }, 4000);
+        }
+
+        function handleKMLUpload(e) { showCustomNotification("Функціонал парсингу KML потребує backend-модуля xml2json."); }
+        function reconnectWithCustomHost() { showCustomNotification("Спроба підключення WS заблокована CSP браузера."); }
+        function toggleUavView(view) {
+            document.getElementById('uav-catalog-grid-container').classList.toggle('hidden', view !== 'grid');
+            document.getElementById('uav-catalog-doc-container').classList.toggle('hidden', view !== 'doc');
         }
 
         function startLiveClock() {
@@ -1078,7 +1029,8 @@
 
         window.onload = function() {
             renderOrbatDirectory();
-            selectUnitFromMap(selectedUnitId);
+            updateIntelProfile(selectedUnitId);
+            renderKmlTargetsTable(ACTIVE_KML_TARGETS);
             renderUavCatalog();
             switchTab('map');
             startLiveClock();
