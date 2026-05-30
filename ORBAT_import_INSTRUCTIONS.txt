@@ -1,0 +1,104 @@
+Инструкция: автоматический импорт подразделений (ORBAT)
+
+Файлы в репозитории
+- server.py         — сервер FastAPI (эндпоинты для импорта/авторизации)
+- requirements.txt  — список зависимостей (добавлен python-docx)
+- units.json        — место хранения подгруженных подразделений (создаётся после первого импорта)
+- units_docs/       — (опционально) директория на сервере для массового импорта .docx/.txt файлов
+
+1) Подготовка окружения
+- Рекомендуется виртуальное окружение (venv):
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+- Установите зависимости:
+```bash
+pip install -r requirements.txt
+```
+
+2) Настройка пароля администратора (опционально, но обязательно в проде)
+- По умолчанию пароль — admin123. Чтобы задать свой, экспортируйте переменную окружения `ADMIN_PASSWORD`:
+```bash
+export ADMIN_PASSWORD='strong_password_here'
+```
+
+3) Запуск сервера
+```bash
+python3 server.py
+# или
+uvicorn server:app --host 0.0.0.0 --port 8000
+```
+Откройте в браузере http://localhost:8000 — интерфейс уже подгрузит `units.json`, если он есть.
+
+4) Получение админ-токена
+- Выполните POST /api/login с паролем, вернётся JSON с полем `token` (Bearer token, 1 час жизни):
+```bash
+curl -s -X POST -H "Content-Type: application/json" -d '{"password":"your_password"}' http://localhost:8000/api/login
+```
+
+5) Импорт JSON с подразделениями (прямой)
+- Вы можете передать готовый JSON-массив подразделений (тот же формат, что в `INTEL_DATABASE`) в поле `payload`.
+```bash
+curl -X POST http://localhost:8000/api/units \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"payload": [ {"id":"unit-1","name":"Пример","lat":47.6,"lng":36.4} ] }'
+```
+- Это сохранит данные в `units.json` и клиент при перезагрузке страницы подхватит их.
+
+6) Импорт файлов .docx или .txt через upload
+- Пример загрузки одного или нескольких файлов (multipart):
+```bash
+curl -X POST "http://localhost:8000/api/units/import" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -F "files=@./units_docs/unit1.docx" \
+  -F "files=@./units_docs/unit2.txt"
+```
+- Сервер попытается распознать в файле поля вида `Name: ...` или `Назва: ...`, списки через `-` и т.д. Результат добавится в `units.json`.
+
+7) Импорт из папки Google Диска
+- Если у вас есть папка на Google Диске, например "По противнику", скопируйте ID этой папки из URL (часть после `folders/`).
+- Передайте `folder_id` в запросе к новому endpoint`у:
+```bash
+curl -X POST http://localhost:8000/api/units/gdrive_sync \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"folder_id":"<GOOGLE_DRIVE_FOLDER_ID>", "include_subfolders": true }'
+```
+- Сервер будет использовать `credentials.json` (service account) и скачает поддерживаемые файлы `.docx`, `.txt` и Google Docs внутри этой папки.
+- Если внутри папки есть вложенные папки, установите `"include_subfolders": true`.
+
+8) Импорт всех файлов из директории на сервере
+- Поместите `.docx`/`.txt` файлы в папку `units_docs/` рядом с `server.py` (создайте, если нужно).
+- Запустите эндпоинт (в теле укажите `{"path":"units_docs"}`):
+```bash
+curl -X POST http://localhost:8000/api/units/import_dir \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"path":"units_docs"}'
+```
+- Сервер просканирует файлы и добавит новые подразделения в `units.json`.
+
+8) Формат распознаваемых данных (примеры в документе)
+- Документ должен содержать блоки для каждого подразделения, разделённые пустой строкой.
+- Внутри блока допустимы строки вида `Ключ: Значение`, например:
+  Name: 7-й гвардійський полк
+  Lat: 47.625
+  Lng: 36.452
+  UAVs: Orlan-10, Lancet-3
+  Командири: І.І.Іванов; П.П.Петров
+- Списки можно записывать как пунктированный список:
+  - Orlan-10
+  - Lancet-3
+
+9) Проверка и отладка
+- Откройте `units.json` после импорта, чтобы убедиться, что поля корректны.
+- При проблемах — смотрите логи сервера (вывод в терминал) для сообщений об ошибках парсинга.
+
+10) Если хотите, я могу:
+- Подстроить парсер под конкретный шаблон ваших .docx (пришлите примеры) — повышу точность.
+- Сделать UI-кнопку в админ-панели для массового импорта с директорії на сервере.
+
+---
+Файл `units.json` создаётся автоматически в корне проекта и используется фронтендом (index.html).

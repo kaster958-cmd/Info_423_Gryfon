@@ -144,10 +144,11 @@
                 
                 <!-- Tactical Host Link Panel -->
                 <div class="flex flex-wrap items-center gap-3">
-                    <div class="flex items-center gap-2 bg-tacgray-900/80 border border-tacgray-600 px-2.5 py-1 rounded">
+                        <div class="flex items-center gap-2 bg-tacgray-900/80 border border-tacgray-600 px-2.5 py-1 rounded">
                         <span class="text-gray-500 font-mono text-[10px]">HOST:</span>
                         <input type="text" id="ws-host-input" class="bg-black/40 border border-tacgray-600 text-white font-mono text-xs px-2 py-0.5 rounded w-36 focus:outline-none focus:border-tacblue" placeholder="localhost:8000">
                         <button onclick="reconnectWithCustomHost()" class="bg-tacblue/20 hover:bg-tacblue/40 border border-tacblue/50 text-tacblue px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all">CONNECT</button>
+                            <button id="admin-open-btn" onclick="openAdminLogin()" class="ml-2 bg-tacgray-700 hover:bg-tacgray-600 text-white px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all">ADMIN</button>
                     </div>
                     <div id="gis-status" class="text-xs font-mono text-tacred bg-tacred/10 border border-tacred/30 px-3 py-1.5 rounded flex items-center gap-2 transition-all">
                         <span id="gis-status-ping" class="inline-block h-2 w-2 bg-tacred rounded-full animate-ping"></span>
@@ -331,8 +332,8 @@
                 </div>
 
                 <!-- LEAFLET SATELLITE MAP CONTAINER & DETECTED TARGETS LIST (9 cols) -->
-                <div class="md:col-span-9 flex flex-col gap-4">
-                    <div class="bg-tacgray-900 border border-tacgray-600 rounded relative overflow-hidden h-[340px]" id="tactical-leaflet-map-div">
+                    <div class="md:col-span-9 flex flex-col gap-4">
+                    <div class="bg-tacgray-900 border border-tacgray-600 rounded relative overflow-hidden h-[560px]" id="tactical-leaflet-map-div">
                         <!-- Coordinates tracker overlay inside the map container -->
                         <div class="absolute bottom-3 left-3 bg-tacgray-900/90 border border-tacyellow/40 px-3 py-1.5 rounded font-mono text-[10px] text-tacyellow z-[1000] pointer-events-none flex items-center gap-2 shadow-lg">
                             <i class="fa-solid fa-arrow-pointer animate-pulse text-[8px]"></i>
@@ -346,7 +347,7 @@
                             <span class="font-mono text-xs text-tacyellow font-bold uppercase flex items-center gap-2">
                                 <i class="fa-solid fa-table-list"></i> Реєстр розвідданих KML та ручних цілей
                             </span>
-                            <span id="kml-status-badge" class="text-[10px] font-mono bg-tacyellow/20 text-tacyellow border border-tacyellow/40 px-2 py-0.5 rounded uppercase">СИСТЕМА СИНХРОНІЗОВАНА</span>
+                            <span id="kml-status-badge" class="text-[10px] font-mono bg-tacgray-800/30 text-tacyellow border border-tacyellow/40 px-2 py-0.5 rounded uppercase">ЛОКАЛЬНИЙ (ручне завантаження)</span>
                         </div>
                         <div class="overflow-x-auto max-h-[140px]">
                             <table class="w-full text-left font-mono text-xs text-gray-300">
@@ -373,14 +374,14 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-tacgray-600 pb-4 gap-4">
                     <div>
                         <h2 class="text-2xl font-bold text-white tracking-wide">КАТАЛОГ БпЛА ПРОТИВНИКА</h2>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="relative flex h-2 w-2">
-                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tacgreen opacity-75"></span>
-                              <span class="relative inline-flex rounded-full h-2 w-2 bg-tacgreen"></span>
-                            </span>
-                            <p class="text-xs font-mono text-tacgreen">LIVE SYNC: GOOGLE DOCS</p>
-                            <a href="https://docs.google.com/document/d/1vwA6HxGFdndINLxsXpvdyWfwsYcO79GOsb5gZaNfy_k/edit" target="_blank" class="text-[10px] bg-tacgray-700 hover:bg-tacgray-600 text-white px-2 py-0.5 rounded transition-colors border border-tacgray-500 flex items-center gap-1"><i class="fa-solid fa-arrow-up-right-from-square"></i> Джерело</a>
-                        </div>
+                                        <div class="flex items-center gap-2 mt-1">
+                                                        <span class="relative flex h-2 w-2">
+                                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tacgreen opacity-75"></span>
+                                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-tacgreen"></span>
+                                                        </span>
+                                                        <p class="text-xs font-mono text-tacgreen">ДЖЕРЕЛО: РУЧНЕ ЗАВАНТАЖЕННЯ</p>
+                                                        <a href="#" onclick="showCustomNotification('Цей розділ працює в локальному режимі. Використайте кнопку \"Імпортувати звіти\" нижче.')" class="text-[10px] bg-tacgray-700 hover:bg-tacgray-600 text-white px-2 py-0.5 rounded transition-colors border border-tacgray-500 flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> Інфо</a>
+                                                </div>
                     </div>
                     <div class="flex flex-col items-end gap-2">
                         <!-- View mode toggler -->
@@ -414,12 +415,12 @@
 
             <!-- TAB CONTENT 4: CAPTURED INTELLIGENCE (FORMERLY TESTING) -->
             <div id="content-testing" class="tab-content flex-grow hidden bg-tacgray-800 border border-tacgray-600 rounded p-6">
-                <div class="flex justify-between items-center mb-6 border-b border-tacgray-600 pb-4">
+                <div class="flex flex-col gap-4 mb-6 border-b border-tacgray-600 pb-4 lg:flex-row lg:items-center lg:justify-between">
                     <div>
                         <h2 class="text-2xl font-bold text-white tracking-wide">АНАЛІТИЧНИЙ ДЕКОДЕР SIGINT &amp; OSINT</h2>
                         <p class="text-sm font-mono text-tacred">Перехоплені тактичні доктрини, інфографіки БАРС «САРМАТ» та оперативні методики РФ</p>
                     </div>
-                    <span class="text-xs bg-tacred/10 text-tacred border border-tacred/30 px-3 py-1 rounded font-mono font-bold animate-pulse">CLASSIFIED INTEL</span>
+                    <span class="text-xs bg-tacred/10 text-tacred border border-tacred/30 px-3 py-1 rounded font-mono font-bold animate-pulse inline-flex items-center gap-2">CLASSIFIED INTEL</span>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -724,22 +725,25 @@
 
             <!-- TAB CONTENT 5: ANALYTICS & DOCS -->
             <div id="content-analytics" class="tab-content flex-grow hidden grid-cols-1 md:grid-cols-12 gap-4 bg-tacgray-800 border border-tacgray-600 rounded p-4">
-                <div class="md:col-span-4 flex flex-col gap-4">
-                    <div class="bg-tacgray-900 border border-tacgray-600 rounded p-2 h-[340px] relative overflow-hidden glow-red">
+                <div class="md:col-span-8 flex flex-col gap-4">
+                    <div class="bg-tacgray-900 border border-tacgray-600 rounded p-2 h-[680px] relative overflow-hidden glow-red">
                         <div class="absolute top-0 left-0 bg-tacred/80 text-white text-[10px] font-mono px-2 py-1 z-10 rounded-br">ОПЕРАТИВНА ОБСТАНОВКА (ППО)</div>
                         <iframe src="https://alerts.in.ua/?pwa&showThreats&showWarnings" class="w-full h-full border-none rounded" title="Мапа повітряних тривог" frameborder="0"></iframe>
                     </div>
                     <div class="bg-tacgray-900/60 border border-tacgray-600 rounded p-4 flex-grow">
                         <h3 class="text-sm font-bold text-tacblue mb-2 font-mono uppercase border-b border-tacgray-600 pb-2">
-                            <i class="fa-brands fa-google-drive"></i> Синхронізація хмари
+                            <i class="fa-solid fa-archive"></i> Архів (локальний)
                         </h3>
-                        <p class="text-xs text-gray-400 mb-4">Статус підключення до Google API: <span class="text-tacyellow">ОЧІКУВАННЯ БЕКЕНДУ</span></p>
-                        <button class="w-full bg-tacblue/20 border border-tacblue text-tacblue hover:bg-tacblue/40 font-mono text-xs py-2 rounded transition-all">
-                            ОНОВИТИ ІНДЕКС ДОКУМЕНТІВ
-                        </button>
+                        <p class="text-xs text-gray-400 mb-4">Доступний локальний архів. Завантажуйте PDF вручну.</p>
+                        <div class="flex gap-2">
+                            <input id="reports-file-input" type="file" accept="application/pdf" multiple class="hidden" onchange="handleReportsUpload(event)">
+                            <button onclick="document.getElementById('reports-file-input').click()" class="flex-1 bg-tacblue/20 border border-tacblue text-tacblue hover:bg-tacblue/40 font-mono text-xs py-2 rounded transition-all">Імпортувати звіти (PDF)</button>
+                            <button onclick="clearLocalReports()" class="flex-0 bg-tacgray-700 hover:bg-tacgray-600 text-white font-mono text-xs py-2 px-3 rounded transition-all">Очистити</button>
+                        </div>
+                        <div id="local-reports-list" class="mt-3 space-y-2 text-[11px]"></div>
                     </div>
                 </div>
-                <div class="md:col-span-8 bg-tacgray-900/80 border border-tacgray-600 rounded p-4 overflow-y-auto max-h-[600px]">
+                <div class="md:col-span-4 bg-tacgray-900/80 border border-tacgray-600 rounded p-4 overflow-y-auto max-h-[600px]">
                     <h2 class="text-lg font-bold text-white tracking-wide mb-4 font-sans border-b border-tacgray-600 pb-2">РЕЄСТР АНАЛІТИЧНИХ ЗВІТІВ</h2>
                     <div class="space-y-3" id="analytics-docs-list">
                         <!-- Документи -->
@@ -771,6 +775,36 @@
 
         </section>
     </main>
+
+    <!-- ADMIN LOGIN & CONTROLS (локальна спрощена аутентифікація) -->
+    <div id="admin-login-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-tacgray-800 border border-tacblue rounded max-w-sm w-full p-6 relative">
+            <button onclick="closeAdminLogin()" class="absolute top-3 right-3 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-lg font-bold text-tacblue mb-2">Адмін: Вхід</h3>
+            <p class="text-xs text-gray-400 mb-3">Введіть пароль для доступу до панелі керування.</p>
+            <input id="admin-password-input" type="password" placeholder="Пароль" class="w-full bg-black/40 border border-tacgray-600 px-3 py-2 rounded text-white mb-3" />
+            <div class="flex gap-2">
+                <button onclick="tryAdminLogin()" class="flex-1 bg-tacblue text-white py-2 rounded">Увійти</button>
+                <button onclick="closeAdminLogin()" class="flex-0 bg-tacgray-700 text-white py-2 px-3 rounded">Відміна</button>
+            </div>
+            <p class="text-[10px] text-gray-500 mt-3">Примітка: це спрощена локальна автентифікація. Змініть пароль у коді при необхідності.</p>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL (показується після успішного входу) -->
+    <div id="admin-panel" class="hidden fixed top-20 right-6 z-50 w-64 bg-tacgray-900 border border-tacgray-600 p-3 rounded shadow-lg font-mono text-sm">
+        <div class="flex justify-between items-center mb-2">
+            <strong class="text-tacblue">Панель Адміністратора</strong>
+            <button onclick="logoutAdmin()" class="text-[12px] text-gray-400 hover:text-white"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+            <div class="space-y-2">
+            <button onclick="openManualTargetModal(47.56, 36.65)" class="w-full bg-tacyellow text-tacgray-900 py-1 rounded text-xs">Додати ціль (ручна)</button>
+            <button onclick="exportTargets()" class="w-full bg-tacblue text-white py-1 rounded text-xs">Експортувати цілі</button>
+            <input id="admin-import-input" type="file" accept="application/json" class="hidden" onchange="handleAdminImport(event)">
+            <button onclick="document.getElementById('admin-import-input').click()" class="w-full bg-tacgray-700 text-white py-1 rounded text-xs">Імпортувати (JSON)</button>
+            <button onclick="clearAllTargets()" class="w-full bg-red-600 text-white py-1 rounded text-xs">Видалити всі цілі</button>
+        </div>
+    </div>
 
     <!-- MANUAL TARGET ADDING OVERLAY MODAL -->
     <div id="manual-target-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -843,7 +877,7 @@
     <!-- INTERACTIVE GIS AND ANALYTICAL ENGINE -->
     <script>
         // MASTER DATABASE - ENRICHED AND RESTORED MULTI-LAYER ORBAT DATABASE
-        const INTEL_DATABASE = [
+        let INTEL_DATABASE = [
             {
                 id: "unit-7", 
                 name: "7-й гвардійський полк БпС", 
@@ -1915,7 +1949,139 @@
             }, 1000);
         }
 
-        window.onload = function() {
+        async function fetchUnitsFromServer() {
+            try {
+                const res = await fetch('/api/units');
+                if (!res.ok) return;
+                const json = await res.json();
+                if (json && Array.isArray(json.data) && json.data.length > 0) {
+                    INTEL_DATABASE = json.data;
+                    console.log('Loaded units from server:', INTEL_DATABASE.length);
+                }
+            } catch (err) {
+                console.warn('Could not load units from server', err);
+            }
+        }
+
+        // Server-backed admin controls
+        let isAdmin = false;
+        let LOCAL_REPORTS = [];
+        let serverAdminToken = null;
+
+        function openAdminLogin() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+            document.getElementById('admin-password-input').value = '';
+        }
+        function closeAdminLogin() { document.getElementById('admin-login-modal').classList.add('hidden'); }
+
+        async function tryAdminLogin() {
+            const val = document.getElementById('admin-password-input').value || '';
+            try {
+                const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: val }) });
+                if (!res.ok) { showCustomNotification('Невірний пароль'); return; }
+                const data = await res.json();
+                serverAdminToken = data.token;
+                isAdmin = true;
+                document.getElementById('admin-login-modal').classList.add('hidden');
+                document.getElementById('admin-panel').classList.remove('hidden');
+                showCustomNotification('Адмін: доступ надано (сервер)');
+                document.getElementById('admin-open-btn').classList.add('bg-tacgreen', 'text-white');
+            } catch (err) {
+                showCustomNotification('Помилка при з'єднанні з сервером');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            serverAdminToken = null;
+            document.getElementById('admin-panel').classList.add('hidden');
+            document.getElementById('admin-open-btn').classList.remove('bg-tacgreen', 'text-white');
+            showCustomNotification('Адмін: вихід виконано');
+        }
+
+        async function exportTargets() {
+            try {
+                const res = await fetch('/api/targets');
+                if (!res.ok) { showCustomNotification('Помилка при отриманні цілей'); return; }
+                const json = await res.json();
+                const data = JSON.stringify(json.data || [], null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = `targets_${Date.now()}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+            } catch (err) { showCustomNotification('Помилка експорту'); }
+        }
+
+        async function handleAdminImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (!Array.isArray(parsed)) { showCustomNotification('Помилка формату JSON'); return; }
+                    if (!serverAdminToken) { showCustomNotification('Потрібен адмін-токен'); return; }
+                    const res = await fetch('/api/targets', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + serverAdminToken }, body: JSON.stringify({ payload: parsed }) });
+                    if (!res.ok) { showCustomNotification('Помилка імпорту на сервер'); return; }
+                    // refresh local view from server
+                    const updated = await (await fetch('/api/targets')).json();
+                    ACTIVE_KML_TARGETS = sanitizeAndSyncTargets(updated.data || []);
+                    if (map) renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
+                    renderKmlTargetsTable(ACTIVE_KML_TARGETS);
+                    showCustomNotification(`Імпортовано ${parsed.length} цілей на сервері`);
+                } catch (err) { showCustomNotification('Помилка при читанні JSON'); }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        async function clearAllTargets() {
+            if (!confirm('Видалити всі цілі на сервері?')) return;
+            if (!serverAdminToken) { showCustomNotification('Потрібен адмін-токен'); return; }
+            try {
+                const res = await fetch('/api/targets', { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + serverAdminToken } });
+                if (!res.ok) { showCustomNotification('Помилка при видаленні'); return; }
+                ACTIVE_KML_TARGETS = [];
+                if (layerGroupsStorage.kml) layerGroupsStorage.kml.clearLayers();
+                if (layerGroupsStorage.ew) layerGroupsStorage.ew.clearLayers();
+                if (layerGroupsStorage.logistics) layerGroupsStorage.logistics.clearLayers();
+                renderKmlTargetsTable(ACTIVE_KML_TARGETS);
+                showCustomNotification('Всі цілі видалено на сервері');
+            } catch (err) { showCustomNotification('Помилка при видаленні цілей'); }
+        }
+
+        function handleReportsUpload(event) {
+            const files = Array.from(event.target.files || []);
+            if (files.length === 0) return;
+            files.forEach(f => {
+                const url = URL.createObjectURL(f);
+                LOCAL_REPORTS.push({ name: f.name, date: new Date().toISOString().split('T')[0], url });
+            });
+            renderLocalReports();
+            showCustomNotification(`Імпортовано ${files.length} звіт(ів)`);
+            event.target.value = '';
+        }
+
+        function renderLocalReports() {
+            const container = document.getElementById('local-reports-list');
+            container.innerHTML = '';
+            LOCAL_REPORTS.forEach(r => {
+                const el = document.createElement('div');
+                el.className = 'flex justify-between items-center bg-tacgray-800 border border-tacgray-700 p-2 rounded';
+                el.innerHTML = `<div class="text-[11px]">${r.name} <div class='text-[10px] text-gray-400'>${r.date}</div></div><a href='${r.url}' target='_blank' class='bg-tacblue px-2 py-1 rounded text-xs text-white'>Відкрити</a>`;
+                container.appendChild(el);
+            });
+        }
+
+        function clearLocalReports() {
+            if (!confirm('Очистити список локальних звітів?')) return;
+            LOCAL_REPORTS.forEach(r => { try{ URL.revokeObjectURL(r.url);}catch(e){} });
+            LOCAL_REPORTS = [];
+            renderLocalReports();
+            showCustomNotification('Локальні звіти очищено');
+        }
+
+        window.onload = async function() {
+            await fetchUnitsFromServer();
             renderUnitSelector();
             updateUnitIntelDisplay();
             renderUavCatalog();
