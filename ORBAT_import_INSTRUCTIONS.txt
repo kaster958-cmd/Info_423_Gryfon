@@ -17,8 +17,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-2) Настройка пароля администратора (опционально, но обязательно в проде)
-- По умолчанию пароль — admin123. Чтобы задать свой, экспортируйте переменную окружения `ADMIN_PASSWORD`:
+2) Настройка пароля администратора
+- Пароль администратора обязателен. Перед запуском экспортируйте переменную окружения `ADMIN_PASSWORD`:
 ```bash
 export ADMIN_PASSWORD='strong_password_here'
 ```
@@ -66,8 +66,12 @@ curl -X POST http://localhost:8000/api/units/gdrive_sync \
   -H "Content-Type: application/json" \
   -d '{"folder_id":"<GOOGLE_DRIVE_FOLDER_ID>", "include_subfolders": true }'
 ```
-- Сервер будет использовать `credentials.json` (service account) и скачает поддерживаемые файлы `.docx`, `.txt` и Google Docs внутри этой папки.
+- Сервер будет использовать файл из `GDRIVE_CREDENTIALS_FILE` или `credentials.json` по умолчанию. Это должен быть настоящий JSON service account от Google Cloud; пример структуры есть в `credentials.example.json`.
 - Если внутри папки есть вложенные папки, установите `"include_subfolders": true`.
+
+7.1) Синхронизация PDF-отчётов из Google Drive
+- Укажите ID папки с PDF-отчётами в `GDRIVE_REPORTS_FOLDER_ID`.
+- Интерфейс вызывает `/api/v1/analytics/reports` на том же FastAPI-сервере.
 
 8) Импорт всех файлов из директории на сервере
 - Поместите `.docx`/`.txt` файлы в папку `units_docs/` рядом с `server.py` (создайте, если нужно).

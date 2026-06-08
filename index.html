@@ -1766,9 +1766,15 @@
         }
 
         function sendTargetsToServer(targets) {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ type: "new_targets", payload: targets }));
+            if (!serverAdminToken) {
+                showCustomNotification('Потрібен адмін-доступ для синхронізації цілей із сервером.');
+                return false;
             }
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: "new_targets", payload: targets, token: serverAdminToken }));
+                return true;
+            }
+            return false;
         }
 
         function connectWebSocket() {
@@ -1795,7 +1801,7 @@
                     updateGisStatus("connected", `GIS LINK STATUS: CONNECTED TO ${targetHost}`);
                     showCustomNotification(`Зв'язок із тактичним сервером ${targetHost} встановлено.`);
                     playPing(1200, 0.15, "sine");
-                    if (ACTIVE_KML_TARGETS.length > 0) {
+                    if (serverAdminToken && ACTIVE_KML_TARGETS.length > 0) {
                         sendTargetsToServer(ACTIVE_KML_TARGETS);
                     }
                 };
@@ -1819,6 +1825,8 @@
                                 document.getElementById('kml-status-badge').className = "text-[10px] font-mono bg-tacgreen/20 text-tacgreen border border-tacgreen/40 px-2 py-0.5 rounded uppercase font-bold";
                                 playPing(1100, 0.05, "triangle");
                             }
+                        } else if (message.type === "auth_error") {
+                            showCustomNotification(message.message || 'Потрібна авторизація для WebSocket-запису.');
                         }
                     } catch (err) {
                         console.error("Помилка обробки повідомлення WebSocket:", err);
@@ -1922,8 +1930,14 @@
 
                     if (parsedTargets.length > 0) {
                         if (socket && socket.readyState === WebSocket.OPEN) {
-                            sendTargetsToServer(parsedTargets);
-                            showCustomNotification(`Імпортовано ${parsedTargets.length} цілей. Надсилання в мережу...`);
+                            if (sendTargetsToServer(parsedTargets)) {
+                                showCustomNotification(`Імпортовано ${parsedTargets.length} цілей. Надсилання в мережу...`);
+                            } else {
+                                ACTIVE_KML_TARGETS = sanitizeAndSyncTargets([...ACTIVE_KML_TARGETS, ...parsedTargets]);
+                                renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
+                                renderKmlTargetsTable(ACTIVE_KML_TARGETS);
+                                showCustomNotification(`Імпортовано ${parsedTargets.length} цілей локально. Увійдіть як адмін для синхронізації.`);
+                            }
                         } else {
                             ACTIVE_KML_TARGETS = sanitizeAndSyncTargets([...ACTIVE_KML_TARGETS, ...parsedTargets]);
                             renderKmlTargetsOnMap(ACTIVE_KML_TARGETS);
@@ -2097,7 +2111,7 @@
     playPing(900, 0.1, 'sine');
     
     try {
-        const response = await fetch('http://localhost:8000/api/v1/analytics/reports');
+        const response = await fetch('/api/v1/analytics/reports');
         if (!response.ok) throw new Error('Помилка мережі: ' + response.status);
         
         const result = await response.json();

@@ -1,0 +1,10 @@
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+
+.env
+credentials.json
+targets.json
+units.json
+units_docs/

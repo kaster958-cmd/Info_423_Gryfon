@@ -1,10 +1,13 @@
 # server.py
 import json
 import os
+import tempfile
+import threading
 import time
 import uuid
-from typing import List
+from typing import Any
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, HTTPException, Header, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from docx import Document
 import re
@@ -16,6 +19,33 @@ from googleapiclient.http import MediaIoBaseDownload
 
 app = FastAPI(title="War Room Console Server")
 
+cors_origins = [
+    origin.strip()
+    for origin in os.environ.get("CORS_ORIGINS", "").split(",")
+    if origin.strip()
+]
+if cors_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+
+def _atomic_write_json(path: str, payload: Any):
+    directory = os.path.dirname(os.path.abspath(path)) or "."
+    fd, tmp_path = tempfile.mkstemp(prefix=".tmp-", suffix=".json", dir=directory)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, path)
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
+
 # Зберігаємо список усіх активних підключень (браузерів)
 class ConnectionManager:
     def __init__(self):
@@ -23,6 +53,7 @@ class ConnectionManager:
         self.tactical_targets = [] # Тут сервер зберігатиме завантажені цілі
         self.allowed_tokens: dict[str, float] = {}  # token -> expiry timestamp
         self._data_file = 'targets.json'
+        self._lock = threading.RLock()
         self.load_targets()
 
     async def connect(self, websocket: WebSocket):
@@ -36,14 +67,15 @@ class ConnectionManager:
         try:
             if os.path.exists(self._data_file):
                 with open(self._data_file, 'r', encoding='utf-8') as f:
-                    self.tactical_targets = json.load(f)
+                    with self._lock:
+                        self.tactical_targets = json.load(f)
         except Exception:
             self.tactical_targets = []
 
     def save_targets(self):
         try:
-            with open(self._data_file, 'w', encoding='utf-8') as f:
-                json.dump(self.tactical_targets, f, ensure_ascii=False, indent=2)
+            with self._lock:
+                _atomic_write_json(self._data_file, self.tactical_targets)
         except Exception as e:
             print('Error saving targets:', e)
 
@@ -54,7 +86,8 @@ class ConnectionManager:
         try:
             if os.path.exists(self.units_file):
                 with open(self.units_file, 'r', encoding='utf-8') as f:
-                    units = json.load(f)
+                    with self._lock:
+                        units = json.load(f)
         except Exception as e:
             print('Error loading units:', e)
             units = []
@@ -62,8 +95,8 @@ class ConnectionManager:
 
     def save_units(self):
         try:
-            with open(self.units_file, 'w', encoding='utf-8') as f:
-                json.dump(self.units, f, ensure_ascii=False, indent=2)
+            with self._lock:
+                _atomic_write_json(self.units_file, self.units)
         except Exception as e:
             print('Error saving units:', e)
 
@@ -91,6 +124,22 @@ def validate_token(auth_header: str | None) -> bool:
         del manager.allowed_tokens[token]
         return False
     return True
+
+
+def validate_token_value(token: str | None) -> bool:
+    if not token:
+        return False
+    return validate_token(f"Bearer {token}")
+
+
+def get_admin_password() -> str:
+    password = os.environ.get('ADMIN_PASSWORD')
+    if not password:
+        raise HTTPException(
+            status_code=503,
+            detail='ADMIN_PASSWORD environment variable is required'
+        )
+    return password
 
 
 # --- Simple parsers for .docx and .txt files to build unit objects ---
@@ -263,6 +312,21 @@ def parse_txt_content(text: str):
                 last_key = None
                 if k in ('name','назва'):
                     unit['name'] = v; unit['id'] = _make_id(v)
+                elif k in ('lat','latitude','широта'):
+                    try:
+                        unit['lat'] = float(v)
+                    except:
+                        unit['lat'] = None
+                elif k in ('lng','lon','longitude','довгота'):
+                    try:
+                        unit['lng'] = float(v)
+                    except:
+                        unit['lng'] = None
+                elif 'coord' in k or 'коорд' in k or 'координат' in k:
+                    lat, lng = _parse_coord_pair(v)
+                    if lat is not None:
+                        unit['lat'] = lat
+                        unit['lng'] = lng
                 elif k in ('uavs','безпілотники'):
                     unit['uavs'] = [it.strip() for it in re.split(r'[;,]\s*', v) if it.strip()]
                     last_key = 'uavs'
@@ -294,6 +358,33 @@ def get_gdrive_service():
     scopes = ['https://www.googleapis.com/auth/drive.readonly']
     creds = service_account.Credentials.from_service_account_file(service_account_file, scopes=scopes)
     return build('drive', 'v3', credentials=creds)
+
+
+def list_pdf_reports_from_gdrive(folder_id: str | None = None, page_size: int = 50):
+    target_folder_id = folder_id or os.environ.get('GDRIVE_REPORTS_FOLDER_ID')
+    if not target_folder_id:
+        raise ValueError('GDRIVE_REPORTS_FOLDER_ID is required')
+
+    service = get_gdrive_service()
+    query = f"'{target_folder_id}' in parents and mimeType='application/pdf' and trashed=false"
+    results = service.files().list(
+        q=query,
+        pageSize=page_size,
+        fields="files(id, name, createdTime, webViewLink, webContentLink)",
+        orderBy="createdTime desc"
+    ).execute()
+
+    reports = []
+    for item in results.get('files', []):
+        created = item.get('createdTime') or ''
+        reports.append({
+            "id": item.get('id'),
+            "name": item.get('name'),
+            "date": created.split('T')[0] if created else '',
+            "view_url": item.get('webViewLink'),
+            "download_url": item.get('webContentLink')
+        })
+    return reports
 
 
 def download_drive_file(service, file_id, mime_type):
@@ -458,6 +549,15 @@ async def api_units_gdrive_sync(req: Request, authorization: str | None = Header
     return JSONResponse({ 'status': 'ok', 'added': len(added), 'count': len(manager.units), 'folder_id': folder_id })
 
 
+@app.get("/api/v1/analytics/reports", tags=["Intelligence"])
+async def api_get_pdf_reports(folder_id: str | None = None):
+    try:
+        reports = list_pdf_reports_from_gdrive(folder_id=folder_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return JSONResponse({"status": "success", "count": len(reports), "data": reports})
+
+
 # Віддаємо наш HTML інтерфейс при заході на головну сторінку
 @app.get("/")
 async def get_dashboard():
@@ -471,7 +571,7 @@ async def get_dashboard():
 async def api_login(req: Request):
     body = await req.json()
     password = body.get('password')
-    expected = os.environ.get('ADMIN_PASSWORD', 'admin123')
+    expected = get_admin_password()
     if password == expected:
         token = str(uuid.uuid4())
         expiry = time.time() + 60 * 60  # 1 hour
@@ -500,8 +600,9 @@ async def api_post_units(req: Request, authorization: str | None = Header(defaul
     payload = body.get('payload') if isinstance(body, dict) else body
     if not payload or not isinstance(payload, list):
         raise HTTPException(status_code=400, detail='payload must be a list')
-    manager.units = payload
-    manager.save_units()
+    with manager._lock:
+        manager.units = payload
+        manager.save_units()
     return JSONResponse({ 'status': 'ok', 'count': len(manager.units) })
 
 
@@ -514,11 +615,12 @@ async def api_post_targets(req: Request, authorization: str | None = Header(defa
     payload = body.get('payload') if isinstance(body, dict) else body
     if not payload:
         raise HTTPException(status_code=400, detail='No payload')
-    if isinstance(payload, list):
-        manager.tactical_targets.extend(payload)
-    else:
-        manager.tactical_targets.append(payload)
-    manager.save_targets()
+    with manager._lock:
+        if isinstance(payload, list):
+            manager.tactical_targets.extend(payload)
+        else:
+            manager.tactical_targets.append(payload)
+        manager.save_targets()
     # broadcast update
     await manager.broadcast(json.dumps({ 'type': 'update_targets', 'payload': manager.tactical_targets }))
     return JSONResponse({ 'status': 'ok', 'count': len(manager.tactical_targets) })
@@ -528,8 +630,9 @@ async def api_post_targets(req: Request, authorization: str | None = Header(defa
 async def api_delete_targets(authorization: str | None = Header(default=None)):
     if not validate_token(authorization):
         raise HTTPException(status_code=401, detail='Unauthorized')
-    manager.tactical_targets = []
-    manager.save_targets()
+    with manager._lock:
+        manager.tactical_targets = []
+        manager.save_targets()
     await manager.broadcast(json.dumps({ 'type': 'update_targets', 'payload': manager.tactical_targets }))
     return JSONResponse({ 'status': 'cleared' })
 
@@ -544,9 +647,19 @@ async def websocket_endpoint(websocket: WebSocket):
             message = json.loads(data)
             
             if message.get("type") == "new_targets":
+                if not validate_token_value(message.get("token")):
+                    await websocket.send_text(json.dumps({
+                        "type": "auth_error",
+                        "message": "Admin token is required to publish targets"
+                    }))
+                    continue
                 # Додаємо нові цілі в базу сервера
                 new_targets = message.get("payload", [])
-                manager.tactical_targets.extend(new_targets)
+                if not isinstance(new_targets, list):
+                    new_targets = [new_targets]
+                with manager._lock:
+                    manager.tactical_targets.extend(new_targets)
+                    manager.save_targets()
                 
                 # Розсилаємо оновлення ВСІМ підключеним клієнтам
                 await manager.broadcast(json.dumps({
