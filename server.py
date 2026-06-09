@@ -34,6 +34,18 @@ if cors_origins:
     )
 
 
+def get_lan_url(port: int = 8000) -> str:
+    try:
+        import socket
+
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+            sock.connect(("8.8.8.8", 80))
+            host = sock.getsockname()[0]
+    except OSError:
+        host = "127.0.0.1"
+    return f"http://{host}:{port}"
+
+
 def _atomic_write_json(path: str, payload: Any):
     directory = os.path.dirname(os.path.abspath(path)) or "."
     fd, tmp_path = tempfile.mkstemp(prefix=".tmp-", suffix=".json", dir=directory)
@@ -671,5 +683,7 @@ async def websocket_endpoint(websocket: WebSocket):
         manager.disconnect(websocket)
 
 if __name__ == "__main__":
-    print("🚀 Тактичний сервер запущено! Відкрийте http://localhost:8000 у браузері.")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", "8000"))
+    print(f"Тактичний сервер запущено: http://localhost:{port}")
+    print(f"Для Android/iPhone у цій Wi-Fi мережі: {get_lan_url(port)}")
+    uvicorn.run(app, host="0.0.0.0", port=port)
