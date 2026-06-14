@@ -8,3 +8,9 @@ credentials.json
 targets.json
 units.json
 units_docs/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
